@@ -1,0 +1,11 @@
+# Ruido del sistema
+.DS_Store
+._*
+
+# Artefactos de verificacion en navegador
+.playwright-mcp/
+*.png.tmp
+
+# Cache de Python
+__pycache__/
+*.pyc
