@@ -166,6 +166,19 @@ Tanto la **Ruta A (Con Java)** como la **Ruta B (Sin Java)** desglosan ahora los
 * **Solución:** se ha añadido una tarjeta propia en la guía práctica, la primera de las nueve, con las tres comprobaciones concretas que hay que hacer antes de pagar algo no reembolsable (que el aeropuerto opera con normalidad, que el resort y su lancha están operativos, y que la salida a Padar no tiene restricciones) y dónde comprobarlo (USGS y BMKG para lo sismológico; por escrito al hotel y al operador del barco para la operativa real).
 * **Contexto temporal honesto:** a comienzos de septiembre de 2026 la reconstrucción seguía en curso. El viaje sale ocho meses después, en abril de 2027, así que lo previsible es que esté normalizado, y así se dice, sin alarmismo pero sin ocultarlo.
 
+### Q. Publicación en GitHub (4 de septiembre de 2026)
+* **Petición:** *"subelo a github y dame el enlace"*. Es la primera autorización expresa para actuar sobre GitHub; hasta este momento no se había creado ni subido nada, por la regla de no tocar GitHub sin permiso explícito.
+* **Repositorio:** `alvaroalonsoorigen-eng/indonesia-2027-templos-y-dragones`, **público**, rama `main`, 79 ficheros.
+* **Web navegable:** GitHub Pages servido desde la raíz de `main`, en `https://alvaroalonsoorigen-eng.github.io/indonesia-2027-templos-y-dragones/`.
+* **Decisiones consultadas antes de publicar**, por tener consecuencias difíciles de revertir:
+  * **Visibilidad.** Se ofreció repositorio privado (más seguro, pero GitHub no renderiza el HTML y la URL navegable en privado exige GitHub Pro de pago) frente a público con Pages. El cliente eligió **público con web navegable**.
+  * **Fechas del viaje.** Se advirtió de que publicar las fechas exactas de un viaje de dos semanas indica a cualquiera cuándo no hay nadie en casa, y que el documento cita Zaragoza como origen. El cliente respondió que **no le preocupa**, así que se publicó sin alterar el contenido.
+* **Comprobaciones hechas antes de subir:**
+  * **Búsqueda de credenciales** por los patrones habituales (contraseña, secreto, token, clave de API y el correo del usuario). Las coincidencias resultaron ser falsos positivos: el topónimo *"Secret Gilis"* en un script antiguo de descarga y subcadenas dentro de las fotos en base64. **No se subió ninguna credencial.**
+  * **Alcance limitado a esta carpeta.** El repositorio se inicializó dentro de `Indonesia 2027 - Templos y dragones`, no en la raíz de `Viajes`, de modo que **los otros proyectos (Brasil, China, Islandia, Pirineos) quedan fuera** y no se han tocado.
+  * **Identidad de git.** No había `user.name` ni `user.email` configurados. Se configuraron **solo en este repositorio** (no en la configuración global del usuario) y con el **correo privado de GitHub** (`242413540+alvaroalonsoorigen-eng@users.noreply.github.com`) en lugar del correo real, precisamente porque el repositorio es público y el correo del autor de un commit queda expuesto de forma permanente.
+* **Añadidos para la publicación:** un `README.md` que explica qué es el documento, que `index.html` es una salida generada y no se edita a mano, cómo regenerarlo con los dos scripts, el criterio de exactitud seguido y los créditos fotográficos; y un `.gitignore` para el ruido del sistema, los artefactos de verificación en navegador y la caché de Python.
+
 ---
 
 ## 3. Estado de los archivos en la carpeta
@@ -173,6 +186,8 @@ Tanto la **Ruta A (Con Java)** como la **Ruta B (Sin Java)** desglosan ahora los
 ```
 Indonesia 2027 - Templos y dragones/
 ├── index.html                      <- Documento de decisión interactivo final (8,5 MB, modo claro, vídeo de portada y 7 secciones)
+├── README.md                       <- Presentación del repositorio y cómo regenerar el documento
+├── .gitignore                      <- Ruido del sistema y artefactos de verificación
 ├── AGENTS.md                       <- Instrucciones para el agente y reglas del proyecto
 ├── progress.md                     <- Este registro de seguimiento y decisiones
 └── fuentes/
@@ -254,6 +269,10 @@ Indonesia 2027 - Templos y dragones/
 15. **Cronología de la historia de Indonesia y aviso del terremoto:**
     * *Petición (4 de septiembre de 2026):* "continua", tras completar la reestructuración de las rutas.
     * *Resolución:* Se retomó la sección de historia que quedaba pendiente de insertar: 30 hitos en 6 eras, cada uno con su base documental y con aviso visible en los 5 que siguen en debate, con filtros por época y séptima pestaña en el móvil. El borrador estaba sin tildes y se corrigió con verificación automática de que no se alteró ninguna palabra. Al montarlo se detectó que el terremoto de Flores de agosto de 2026 solo figuraba en la cronología, así que se le dio tarjeta propia en la guía práctica por afectar al aeropuerto de Labuan Bajo, al puerto y a la isla de Padar, que el itinerario usa.
+
+16. **Publicación en GitHub:**
+    * *Petición (4 de septiembre de 2026):* "Súbelo a GitHub y dame el enlace".
+    * *Resolución:* Repositorio público `indonesia-2027-templos-y-dragones` con GitHub Pages activado, tras consultar visibilidad y exposición de las fechas del viaje, comprobar que no se subía ninguna credencial, limitar el repositorio a esta carpeta para no arrastrar los otros viajes, y configurar la identidad de git solo en local y con el correo privado de GitHub para no exponer el correo real en un repositorio público.
 
 ### B. Limitaciones técnicas y aspectos pendientes
 1. **Previsualización automatizada integrada mediante subagente de navegador:** Resuelto en esta sesión mediante el servidor MCP de Playwright, ya disponible; se ha verificado visualmente la web completa en viewport móvil y de escritorio tras cada tanda de cambios relevante.
