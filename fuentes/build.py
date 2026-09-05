@@ -350,6 +350,95 @@ def render_rutas_aereas():
 
 rutas_aereas_html = render_rutas_aereas()
 
+# =============================================================================
+# CONTRATAR EL BARCO DE KOMODO
+# Ejemplos reales con enlace comprobado. Se distingue expresamente quien es
+# armador y quien intermediario, y se marca lo que no se ha podido confirmar.
+# =============================================================================
+BARCOS_KOMODO = [
+    {
+        "nombre": "Catnazse Liveaboard",
+        "url": "https://catnazseliveaboard.com/",
+        "papel": "Armador",
+        "clase": "recomendado",
+        "ficha": "Goleta de 34 m, 8 camarotes, 18 plazas",
+        "precio": "540 USD por persona",
+        "detalle": "Camarote Cafasa, tres días y dos noches, tarifa ya publicada para 2027",
+        "notas": [
+            "Es el único que publica tarifas de 2027, no solo de 2026.",
+            "Los ocho camarotes llevan baño privado con agua caliente y aire acondicionado.",
+            "Hace tanto salida compartida como barco entero.",
+        ],
+    },
+    {
+        "nombre": "Neptune Cruise Phinisi",
+        "url": "https://neptunecruisekomodo.com/",
+        "papel": "Armador",
+        "clase": "recomendado",
+        "ficha": "Goleta de 40 m, 7 camarotes, 20 plazas",
+        "precio": "610 USD por persona",
+        "detalle": "Camarote Deluxe, tres días y dos noches",
+        "notas": [
+            "Es el que mejor acredita ser propietario del barco y no intermediario: tripulación en plantilla y reserva directa sin agencia.",
+            "Todos los camarotes con baño en suite, agua caliente y aire acondicionado.",
+            "Los camarotes Mansard van en cubierta superior, que es la zona más alejada del motor.",
+        ],
+    },
+    {
+        "nombre": "Phinisi Labuan Bajo",
+        "url": "https://phinisilabuanbajo.com/",
+        "papel": "Sin confirmar",
+        "clase": "barato",
+        "ficha": "Goleta Pelita Arunika",
+        "precio": "unos 290 € por persona",
+        "detalle": "Camarote Padar y Siaba, tres días y dos noches",
+        "notas": [
+            "Es la opción asequible de la lista, con baño privado y agua caliente en todos los camarotes.",
+            "Cuidado: su web no menciona aire acondicionado en ninguna descripción. Hay que preguntarlo antes de nada.",
+            "Tampoco declaran ser propietarios del barco ni aclaran si el precio incluye las tasas del parque.",
+        ],
+    },
+    {
+        "nombre": "Komodo Luxury",
+        "url": "https://www.komodoluxury.com/tour-packages/komodo-island-sailing-tour-packages/one-day-trip/",
+        "papel": "Intermediario con flota propia",
+        "clase": "dia",
+        "ficha": "Excursión de un día en lancha rápida",
+        "precio": "90 USD por persona",
+        "detalle": "De 06:00 a 17:30, o 800 USD la lancha entera",
+        "notas": [
+            "Cubre Padar, Pink Beach, la isla de Komodo, Taka Makassar, Manta Point y Kanawa en una sola jornada.",
+            "Es la alternativa si se decide no dormir a bordo, aunque deja fuera el amanecer en Padar.",
+            "Las tasas del parque van aparte y su web no aclara quién saca el cupo.",
+        ],
+    },
+]
+
+
+def render_barcos_komodo():
+    tarjetas = []
+    for b in BARCOS_KOMODO:
+        notas = "".join(f'<li>{n}</li>' for n in b["notas"])
+        tarjetas.append(
+            f'<article class="barco-card barco-{b["clase"]}">'
+            f'<div class="barco-cabecera">'
+            f'<span class="barco-papel">{b["papel"]}</span>'
+            f'<h3 class="barco-nombre">{b["nombre"]}</h3>'
+            f'<p class="barco-ficha">{b["ficha"]}</p>'
+            f'</div>'
+            f'<div class="barco-precio-caja">'
+            f'<span class="barco-precio">{b["precio"]}</span>'
+            f'<span class="barco-detalle">{b["detalle"]}</span>'
+            f'</div>'
+            f'<ul class="barco-notas">{notas}</ul>'
+            f'<a class="barco-enlace" href="{b["url"]}" target="_blank" rel="noopener">Ver la web del operador</a>'
+            f'</article>'
+        )
+    return "".join(tarjetas)
+
+
+barcos_komodo_html = render_barcos_komodo()
+
 html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -887,6 +976,155 @@ h1, h2, h3, .font-serif {{
   color: var(--text-body);
   margin-bottom: 12px;
 }}
+
+/* =========================================================
+   CONTRATAR EL BARCO: aviso del cupo y fichas de operador
+   ========================================================= */
+.aviso-siora {{
+  border-left: 4px solid var(--c-coral-dark);
+  margin-bottom: 22px;
+}}
+
+.aviso-siora p {{ margin-bottom: 12px; }}
+
+.aviso-clave {{
+  background: var(--c-peach);
+  border: 1px solid var(--c-peach-border);
+  border-radius: var(--radius-sm);
+  padding: 15px 18px;
+  margin: 14px 0;
+}}
+
+.aviso-clave strong {{
+  display: block;
+  color: var(--c-coral-dark);
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}}
+
+.aviso-clave p {{ margin-bottom: 0 !important; font-size: 0.95rem; }}
+
+.barcos-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 18px;
+}}
+
+.barco-card {{
+  display: flex;
+  flex-direction: column;
+  background: var(--c-white);
+  border: 1px solid var(--border-light);
+  border-top: 4px solid var(--c-teal);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+}}
+
+.barco-card.barco-barato {{ border-top-color: var(--c-coral); }}
+.barco-card.barco-dia {{ border-top-color: var(--c-indigo); }}
+
+.barco-papel {{
+  display: inline-block;
+  font-size: 0.64rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--c-teal);
+  margin-bottom: 7px;
+}}
+
+.barco-barato .barco-papel {{ color: var(--c-coral-dark); }}
+.barco-dia .barco-papel {{ color: var(--c-indigo); }}
+
+.barco-nombre {{
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  color: var(--text-title);
+  margin-bottom: 3px;
+}}
+
+.barco-ficha {{
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-bottom: 13px;
+}}
+
+.barco-precio-caja {{
+  background: var(--c-porcelain);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  margin-bottom: 13px;
+}}
+
+.barco-precio {{
+  display: block;
+  font-size: 1.06rem;
+  font-weight: 800;
+  color: var(--c-teal);
+}}
+
+.barco-barato .barco-precio {{ color: var(--c-coral-dark); }}
+.barco-dia .barco-precio {{ color: var(--c-indigo); }}
+
+.barco-detalle {{
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-top: 2px;
+}}
+
+.barco-notas {{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+  margin-bottom: 15px;
+}}
+
+.barco-notas li {{
+  position: relative;
+  padding-left: 17px;
+  font-size: 0.855rem;
+  line-height: 1.55;
+  color: var(--text-body);
+}}
+
+.barco-notas li::before {{
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-light);
+}}
+
+.barco-enlace {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--c-teal);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.18s ease, transform 0.12s ease;
+}}
+
+.barco-enlace::after {{ content: "↗"; font-size: 0.9em; }}
+.barco-enlace:hover {{ background: var(--c-teal-dark); transform: translateY(-1px); }}
+.barco-barato .barco-enlace {{ background: var(--c-coral-dark); }}
+.barco-dia .barco-enlace {{ background: var(--c-indigo); }}
 
 /* =========================================================
    DESTINOS DESCARTADOS: foto a la izquierda y motivo a la
@@ -3743,7 +3981,7 @@ footer.clean-footer {{
   <div class="app-screen-view" id="app-view-vuelos">
     <section class="section" id="seccion-vuelos">
       <div class="section-head">
-        <span class="section-tag">Logística aérea</span>
+        <span class="section-tag">Logística</span>
         <h2>Cómo volar desde Zaragoza</h2>
         <p>Dos formas sensatas de llegar y dos que parecen más baratas pero cuestan días de viaje. Cada tira muestra el recorrido completo, con el tren en trazo discontinuo y los vuelos en trazo continuo.</p>
       </div>
@@ -3768,6 +4006,51 @@ footer.clean-footer {{
       </div>
 
       <div class="rutas-aereas">{rutas_aereas_html}</div>
+
+      <div class="section-head" style="margin-top:52px;">
+        <span class="section-tag">El barco de Komodo</span>
+        <h2>Contratar la goleta: antes o allí</h2>
+        <p>La respuesta ha cambiado y conviene saberlo, porque todas las guías en español que circulan dicen lo contrario.</p>
+      </div>
+
+      <div class="clean-panel aviso-siora">
+        <h3 class="panel-header-title">Ya no se puede llegar y regatear</h3>
+        <p>Hasta 2026 la entrada al parque se pagaba en la propia taquilla el mismo día, y por eso funcionaba aterrizar en Labuan Bajo, recorrer las agencias de la calle Soekarno Hatta regateando y zarpar al día siguiente. Eso <strong>ya no es posible</strong>.</p>
+        <p>Desde el <strong>1 de abril de 2026</strong> el Parque Nacional de Komodo tiene un <strong>límite de 1.000 visitantes al día</strong> y la entrada se reserva obligatoriamente por la aplicación oficial <strong>SiOra</strong>, con código QR. <strong>Se ha suprimido la venta en taquilla.</strong> Hay tres franjas de acceso: de 05:00 a 08:00, de 08:00 a 11:00 y de 15:00 a 18:00, y la primera, la del amanecer en Padar, es la que antes se agota.</p>
+        <div class="aviso-clave">
+          <strong>El error que puede costar el viaje:</strong>
+          <p>El barco y la entrada al parque son <strong>dos reservas independientes</strong>. Tener la goleta contratada no reserva el cupo. Se puede acabar con un barco pagado que no puede entrar.</p>
+        </div>
+        <p><strong>Conclusión para abril de 2027:</strong> reservar desde aquí. Abril y mayo son el arranque de la temporada seca, cuando la demanda empieza a subir, y en temporada alta los cupos se agotan entre una y tres semanas antes. El ahorro por negociar en destino que documentan los blogs ronda el 17 por ciento, y hoy no compensa el riesgo de quedarse fuera.</p>
+      </div>
+
+      <div class="barcos-grid">{barcos_komodo_html}</div>
+
+      <div class="two-panel-grid" style="margin-top:22px;">
+        <div class="clean-panel">
+          <h3 class="panel-header-title">Qué preguntar por escrito antes de pagar la señal</h3>
+          <ul class="descarte-lista">
+            <li><strong>¿A qué hora se apaga el generador?</strong> En indonesio funciona bien preguntar <em>jam berapa generator dimatikan</em>. El aire acondicionado sale del generador, así que si hay aire toda la noche, hay ruido toda la noche.</li>
+            <li><strong>¿El barco navega de noche o fondea al anochecer?</strong> Desde enero de 2026 la navegación nocturna está prohibida, pero conviene tenerlo por escrito.</li>
+            <li><strong>¿Dónde está exactamente mi camarote?</strong> Pedid el plano de cubiertas con el camarote marcado. La sala de máquinas va a popa: hay que dormir a proa o al centro, y en cubierta alta.</li>
+            <li><strong>¿Quién saca el cupo de SiOra, y con cuánta antelación?</strong> Es la pregunta que ninguna web de operador responde.</li>
+            <li><strong>¿El precio incluye las tasas del parque?</strong> Pedid el desglose por conceptos: la entrada oficial son 250.000 rupias por persona y día, más 25.000 de puerto y el guardaparques por grupo. Cualquier cifra redonda de 600.000 o 650.000 lleva margen del operador dentro.</li>
+            <li><strong>Camarote asignado por nombre</strong>, no por categoría. Si solo reserváis "deluxe", no podréis comprobar nada de lo anterior.</li>
+          </ul>
+        </div>
+
+        <div class="clean-panel">
+          <h3 class="panel-header-title">Los blogs en español: útiles para el método, no para el precio</h3>
+          <p>Cuatro parejas españolas lo han contado con detalle y merece la pena leerlos, pero sus viajes son de <strong>2017 a 2020</strong> y ninguno menciona el sistema de cupos. Sus precios están obsoletos; su forma de comprobar un barco, no.</p>
+          <ul class="descarte-lista">
+            <li><a href="https://randomtrip.es/barco-flores-lombok-komodo/" target="_blank" rel="noopener">RandomTrip</a> es el más completo sobre la negociación. Descubrieron que quien trató directamente con el capitán pagó un 17 por ciento menos que ellos por el mismo barco, y avisan de no pagar todo por adelantado.</li>
+            <li><a href="https://todobienmama.com/como-visitar-parque-nacional-de-komodo-guia-completa/" target="_blank" rel="noopener">Todo bien, mamá</a> es el que mejor desglosa el gasto de una pareja y el que sitúa las agencias en la calle Soekarno Hatta.</li>
+            <li><a href="https://jerryviaja.com/labuanbajo-dragones-de-komodo-y-pink-beach/" target="_blank" rel="noopener">Jerry Viaja</a> explica el método de regateo, y cuenta algo revelador: ya en el barco descubrieron que cada pasajero había pagado un precio distinto.</li>
+            <li><a href="https://lamaletadecarla.com/parque-nacional-komodo-viaje-barco-dos-dias-una-noche/" target="_blank" rel="noopener">La maleta de Carla</a> llegó sin reserva en temporada baja. Durmieron en cubierta, sin camarote, que es justo lo que aquí se quiere evitar.</li>
+          </ul>
+          <p class="source-note">Si aún queréis mirar agencias en persona al llegar, la calle es Jalan Soekarno Hatta, y Wanua Adventure tiene local físico en el número 8. Sirve para un día de lancha suelto o para buceo, nunca para el barco principal ni para el cupo del parque.</p>
+        </div>
+      </div>
     </section>
   </div>
 
