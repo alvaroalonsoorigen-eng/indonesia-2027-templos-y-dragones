@@ -2894,7 +2894,7 @@ footer.clean-footer {{
                 </div>
                 <h3 class="day-headline">Embarque en barco tradicional Phinisi, Isla Kelor y dragones en Rinca</h3>
                 <div class="day-chip-row">
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Goleta Phinisi</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Goleta Phinisi</a>
                   <span class="day-chip"><svg><use href="#i-fauna"></use></svg>Dragones en Rinca</span>
                   <span class="day-chip"><svg><use href="#i-mar"></use></svg>Isla Kelor</span>
                 </div>
@@ -2929,7 +2929,7 @@ footer.clean-footer {{
                 <div class="day-chip-row">
                   <span class="day-chip"><svg><use href="#i-montana"></use></svg>Mirador de Padar</span>
                   <span class="day-chip"><svg><use href="#i-mar"></use></svg>Snorkel en Pink Beach</span>
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Noche a bordo</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Noche a bordo</a>
                 </div>
                 <div class="day-slots-list">
                   <div class="day-slot-box">
@@ -2963,7 +2963,7 @@ footer.clean-footer {{
                 <div class="day-chip-row">
                   <span class="day-chip"><svg><use href="#i-mar"></use></svg>Mantas gigantes</span>
                   <span class="day-chip"><svg><use href="#i-sol"></use></svg>Taka Makassar</span>
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Noche a bordo</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Noche a bordo</a>
                 </div>
                 <div class="day-slots-list">
                   <div class="day-slot-box">
@@ -3392,7 +3392,7 @@ footer.clean-footer {{
                 <h3 class="day-headline">Vuelo a Labuan Bajo y embarque en barco tradicional Phinisi</h3>
                 <div class="day-chip-row">
                   <span class="day-chip chip-flight"><svg><use href="#i-vuelo"></use></svg>DPS a LBJ</span>
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Goleta Phinisi</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Goleta Phinisi</a>
                   <span class="day-chip"><svg><use href="#i-fauna"></use></svg>Zorros voladores en Kalong</span>
                 </div>
                 <div class="day-slots-list">
@@ -3425,7 +3425,7 @@ footer.clean-footer {{
                 <div class="day-chip-row">
                   <span class="day-chip"><svg><use href="#i-montana"></use></svg>Mirador de Padar</span>
                   <span class="day-chip"><svg><use href="#i-mar"></use></svg>Snorkel en Pink Beach</span>
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Noche a bordo</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Noche a bordo</a>
                 </div>
                 <div class="day-slots-list">
                   <div class="day-slot-box">
@@ -3459,7 +3459,7 @@ footer.clean-footer {{
                   <span class="day-chip"><svg><use href="#i-fauna"></use></svg>Dragones en Loh Liang</span>
                   <span class="day-chip"><svg><use href="#i-mar"></use></svg>Mantas gigantes</span>
                   <span class="day-chip"><svg><use href="#i-sol"></use></svg>Taka Makassar</span>
-                  <span class="day-chip chip-boat"><svg><use href="#i-barco"></use></svg>Noche a bordo</span>
+                  <a class="day-chip chip-boat" href="#contratar-barco" onclick="return goToBarco();" title="Ver operadores, precios y cómo contratarlo"><svg><use href="#i-barco"></use></svg>Noche a bordo</a>
                 </div>
                 <div class="day-slots-list">
                   <div class="day-slot-box">
@@ -4007,7 +4007,7 @@ footer.clean-footer {{
 
       <div class="rutas-aereas">{rutas_aereas_html}</div>
 
-      <div class="section-head" style="margin-top:52px;">
+      <div class="section-head" id="contratar-barco" style="margin-top:52px;">
         <span class="section-tag">El barco de Komodo</span>
         <h2>Contratar la goleta: antes o allí</h2>
         <p>La respuesta ha cambiado y conviene saberlo, porque todas las guías en español que circulan dicen lo contrario.</p>
@@ -4780,6 +4780,29 @@ function filterHistoria(era) {{
     item.style.display = (era === 'todos' || suya === String(era)) ? '' : 'none';
   }});
   if (window.refreshScrollMotion) window.refreshScrollMotion();
+}}
+
+// Salta desde el chip del barco hasta el bloque de operadores y precios.
+function goToBarco() {{
+  const isMobile = window.innerWidth <= 920;
+  if (isMobile) {{
+    switchMobileTab('app-view-vuelos', document.getElementById('bn-vuelos'));
+  }}
+  setTimeout(() => {{
+    const target = document.getElementById('contratar-barco');
+    if (!target) return;
+    target.scrollIntoView({{ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }});
+    // El resplandor se aplica al panel, que es una tarjeta con fondo, y no a
+    // la cabecera de texto, donde el recuadro quedaria flotando en el aire.
+    const panel = document.querySelector('.aviso-siora');
+    if (panel) {{
+      panel.classList.remove('hotel-flash');
+      void panel.offsetWidth;
+      panel.classList.add('hotel-flash');
+      setTimeout(() => panel.classList.remove('hotel-flash'), 2400);
+    }}
+  }}, isMobile ? 360 : 80);
+  return false;
 }}
 
 // Salta desde el chip de alojamiento de un dia hasta su ficha en la coleccion.
