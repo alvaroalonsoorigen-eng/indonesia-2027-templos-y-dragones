@@ -337,3 +337,30 @@ Petición: aumentar el efecto visual del scroll en la guía de Indonesia y mante
 Validación local: build reproducible byte a byte; consola sin errores; ambos itinerarios, sus 28 días y sincronización del mapa; siete pantallas móviles y selector manual del mapa; cuatro filtros de hoteles; enlaces desde el día al alojamiento; cinco anchos (320, 390, 768, 1024 y 1440 px) sin desbordamiento horizontal; cambio de preferencia de movimiento en vivo; todas las imágenes cargadas; ninguna petición externa; apertura directa del HTML en modo sin conexión. Revisados visualmente portada, las tres escenas, itinerario y hoteles en capturas de escritorio y móvil con Chromium local.
 
 Revisado e integrado el 5 de septiembre de 2026, ya con el repositorio publicado y autorizado. Ver el apartado R para el resultado de la revisión y la regresión corregida.
+
+## 5 de septiembre de 2026: integración de la investigación de Condé Nast Traveler
+
+Petición: investigar los contenidos de Condé Nast Traveler sobre Indonesia, integrarlos en el estado actual del proyecto respetando el estilo gráfico y responsivo móvil y de escritorio, y subirlos a GitHub facilitando el enlace.
+
+Hallazgos e incorporaciones realizadas:
+1. **Respaldo editorial a los descartes en «Criterio y autenticidad»:**
+   - Incorporación de un panel dedicado con el reportaje de investigación de Condé Nast Traveler titulado «Bali sin Instagram (y sin estos lugares que puedes evitar)».
+   - Traveler valida punto por punto los descartes de este viaje: desaconseja el sur masificado (Kuta, Seminyak y Canggu) por sus atascos y destrucción de arrozales, advierte del «Disneyland de arrozales» en Tegallalang/Alas Harum con columpios de alquiler y civetas enjauladas para falso café luwak, destapa la trampa de la Puerta del Cielo en Pura Lempuyang (colas con ticket para fotos con un espejo bajo el móvil fingiendo un lago inexistente), y denuncia la masificación en Tirta Empul y el acoso a delfines en Lovina.
+   - Crucialmente, Traveler señala a Sidemen y Munduk como los dos auténticos refugios sostenibles y genuinos de Bali, exactamente las dos bases estratégicas de alojamiento elegidas en la Ruta B del viaje.
+   - Acompañado de dos fotografías comparativas limpias del banco (`tirta_empul` frente a `pura_mengening`), adaptadas de forma fluida a una sola columna en pantallas móviles.
+
+2. **Novedad regulatoria en la Guía («Antes de viajar» -> «Visado y entrada»):**
+   - Actualización del trámite de entrada con la cobertura de Traveler sobre la exigencia de la nueva aplicación oficial unificada **All Indonesia** (accesible en Play Store, App Store y web oficial `allindonesia.imigrasi.go.id`) para llegadas internacionales por Bali Ngurah Rai, Yakarta Soekarno-Hatta, Surabaya Juanda y Batam.
+   - Unifica en un único formulario digital y código QR: inmigración, aduanas (antiguo ECD), sanidad y cuarentena. Tramitable hasta 3 días antes de volar.
+   - Incorporación del recordatorio sobre el endurecimiento de directrices de civismo en Bali: obligatoriedad de vestir con decoro (sarong en templos), contratación de guías oficiales con licencia y respeto estricto a las ceremonias sagradas.
+
+3. **Mención editorial de hotel en la sección de «Hoteles»:**
+   - Incorporación de la reseña de Condé Nast Traveler sobre **Buahan, A Banyan Tree Escape** (Payangan, norte de Ubud), analizando su vanguardista concepto «sin muros ni puertas» (no walls, no doors) en dieciséis balés de palo fierro reciclado suspendidos sobre el río Ayung.
+   - Evaluación rigurosa de confort de descanso: climatización localizada sobre la cama mediante dosel y cortinas, pero abierta al sonido de la selva y su fauna nocturna (para quienes buscan una experiencia sensorial inmersiva y no un aislamiento acústico hermético). Enlaces directos a su web oficial y a la reseña en Traveler.
+
+4. **Detalle cultural en itinerario (Día B-4):**
+   - Incorporación de mención a la recomendación cultural de Traveler sobre el Museo Renacimiento Antonio Blanco en Campuhan (el «Dalí de Bali») como alternativa artística entre jardines tropicales.
+
+Validación técnica:
+- Build reproducible en `fuentes/build.py` con 0 rayas largas.
+- Verificación automatizada con Playwright en Chrome Headless: 0 errores de consola, 14 días en rutas A y B, filtros de hoteles operativos, 7 pantallas móviles conmutables limpiamente, y adaptación responsiva en anchos de 1440px y 390px.

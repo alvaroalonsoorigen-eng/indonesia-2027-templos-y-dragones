@@ -2493,6 +2493,27 @@ a.day-chip:hover::after, a.day-chip:focus-visible::after {{ opacity: 1; }}
   line-height: 1.35;
 }}
 
+/* Respaldo editorial y comparativa de Traveler */
+.traveler-points-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}}
+
+.traveler-compare-photos {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}}
+
+@media (max-width: 600px) {{
+  .traveler-compare-photos {{
+    grid-template-columns: 1fr;
+  }}
+}}
+
 /* =======================================================
    BARRA DE NAVEGACION INFERIOR FIJA TIPO APP (SOLO EN MOVIL)
    Conmutacion de secciones para maxima velocidad y rendimiento
@@ -3342,7 +3363,8 @@ footer.clean-footer {{
                 </div>
               </div>
               <div class="day-info-grid">
-                <div class="info-item"><strong>Experiencia auténtica:</strong><span>Pura Mengening permite vivir el ritual sagrado sin las colas de Tirta Empul.</span></div>
+                <div class="info-item"><strong>Experiencia auténtica:</strong><span>Pura Mengening permite vivir el ritual sagrado sin las colas de Tirta Empul, un criterio avalado expresamente por Condé Nast Traveler para preservar la espiritualidad del melukat.</span></div>
+                <div class="info-item"><strong>Sugerencia de Traveler:</strong><span>Para una tarde diferente de arte cerca de Ubud, Traveler destaca el Museo Renacimiento Antonio Blanco en Campuhan, una singular mansión bohemia entre jardines y cacatúas.</span></div>
                 <div class="info-item"><strong>Descanso:</strong><span>Tercera de las cuatro noches seguidas en el mismo hotel de Sidemen, sin hacer y deshacer maletas.</span></div>
               </div>
             </div>
@@ -3972,6 +3994,32 @@ footer.clean-footer {{
           <li><strong>Alternativa reforzada con espigón sobre el mar:</strong> Plataran Komodo Resort &amp; Spa (Waecicu Beach, del mismo grupo que Plataran Heritage Borobudur) ostenta 1 Llave MICHELIN y el puesto nº1 de 43 hoteles de Labuan Bajo en Tripadvisor, sin incidencias recientes reportadas. Merece considerarse junto a TA'AKTANA y Komodo Resort Sebayur.</li>
         </ul>
       </div>
+
+      <div class="clean-panel panel-recommended" style="margin-top:20px;">
+        <div class="guide-card-head" style="margin-bottom: 12px;">
+          <span class="guide-card-icon" style="background: var(--c-sand);">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          </span>
+          <div>
+            <span class="tag-label" style="background: var(--c-teal-light); color: var(--c-teal-deep); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px;">Reseña editorial de Traveler</span>
+            <h3 class="panel-header-title" style="margin-top: 4px;">Buahan, A Banyan Tree Escape: el concepto «sin muros ni puertas»</h3>
+          </div>
+        </div>
+        <p>
+          Condé Nast Traveler dedicó una amplia reseña al resort más comentado y vanguardista del centro de Bali: <strong>Buahan, A Banyan Tree Escape</strong> (en Payangan, al norte de Ubud, en la subida hacia las montañas de Munduk).
+        </p>
+        <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); margin: 14px 0; border: 1px solid var(--border-light);">
+          <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.6;">
+            <li><strong>Concepto arquitectónico:</strong> dieciséis pabellones (balés) construidos con madera noble de palo fierro reciclado sin ninguna pared exterior ni puerta, solo cortinas translúcidas y persianas de bambú para la lluvia. Cada villa cuenta con piscina privada suspendida sobre el valle y vistas despejadas a las siete cumbres del centro de Bali.</li>
+            <li><strong>Sostenibilidad y bienestar:</strong> solo adultos, cocina hiperlocal plant-based a cargo del chef Eka Sunarya con ingredientes recogidos a menos de una hora del lobby, y Toja Spa en pabellones de bambú abiertos sobre el cañón del río Ayung.</li>
+            <li><strong>Evaluación de descanso y confort de sueño:</strong> cuenta con un sistema tecnológico de aire acondicionado localizado que refresca la cama durante la noche y mosquitera integral. Sin embargo, la ausencia total de cerramiento hermético implica convivir con los sonidos de la selva tropical (canto de ranas, aves al alba) y la presencia natural de insectos y pequeños reptiles. Excelente para una experiencia sensorial inmersiva, pero descartable para quienes requieran insonorización convencional o sientan rechazo hacia la fauna nocturna.</li>
+          </ul>
+        </div>
+        <div class="hotel-action-links" style="margin-top: 14px;">
+          <a href="https://escape.banyantree.com/destinations/buahan" target="_blank" rel="noopener" class="action-btn btn-official-web">Web oficial Buahan</a>
+          <a href="https://www.traveler.es/hotels/buahan-kaja/buahan-a-banyan-tree-escape" target="_blank" rel="noopener" class="action-btn btn-booking-com">Reseña en Traveler</a>
+        </div>
+      </div>
     </section>
   </div>
 
@@ -4107,6 +4155,58 @@ footer.clean-footer {{
         </article>
 
       </div>
+
+      <div class="clean-panel panel-recommended" style="margin-top: 28px;">
+        <div class="guide-card-head" style="margin-bottom: 12px;">
+          <span class="guide-card-icon" style="background: var(--c-sand);">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          </span>
+          <div>
+            <span class="tag-label" style="background: var(--c-teal-light); color: var(--c-teal-deep); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px;">Respaldo editorial</span>
+            <h3 class="panel-header-title" style="margin-top: 4px;">El criterio de Condé Nast Traveler: «Bali sin Instagram»</h3>
+          </div>
+        </div>
+        <p>La prestigiosa revista internacional de viajes <em>Condé Nast Traveler</em> publicó una reveladora investigación editorial titulada <strong>«Bali sin Instagram (y sin estos lugares que puedes evitar)»</strong>. Su análisis coincide punto por punto con los descartes de este viaje y confirma que el sobreturismo ha desvirtuado la autenticidad de varios de los puntos más publicitados:</p>
+
+        <div class="traveler-points-grid">
+          <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); border-left: 3px solid var(--c-coral);">
+            <strong style="color: var(--c-coral-dark); display: block; margin-bottom: 6px;">Lo que Traveler recomienda evitar</strong>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.55;">
+              <li><strong>Kuta, Seminyak y Canggu:</strong> atascos kilométricos de motos, ocio ruidoso y grúas de hormigón sustituyendo los campos de arroz por urbanismo masivo.</li>
+              <li><strong>Tegallalang y Alas Harum:</strong> convertidos en un «Disneyland entre arrozales», con columpios de alquiler con vestidos pomposos para posados y jaulas con civetas para falso café luwak.</li>
+              <li><strong>Pura Lempuyang (Puerta del Cielo):</strong> colas de hasta 3 horas con número para una foto en la que los guías colocan un espejo bajo la lente del móvil para fingir el reflejo de un lago inexistente.</li>
+              <li><strong>Tirta Empul y Lovina:</strong> turnos masificados para sumergirse en la fuente sagrada frente a cientos de miradas, y acoso de decenas de lanchas motorizadas persiguiendo delfines al alba.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); border-left: 3px solid var(--c-teal);">
+            <strong style="color: var(--c-teal-deep); display: block; margin-bottom: 6px;">El auténtico refugio según Traveler</strong>
+            <p style="font-size: 0.88rem; color: var(--text-body); line-height: 1.55; margin-bottom: 10px;">
+              Para experimentar la esencia balinesa sin artificios, Condé Nast Traveler señala expresamente dos coordenadas como el verdadero antídoto al sobreturismo:
+            </p>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.55;">
+              <li><strong>Los arrozales de Sidemen:</strong> el ritmo pausado del este balinés, telares tradicionales en casas familiares y silencio frente al monte Agung.</li>
+              <li><strong>Las montañas y cascadas de Munduk:</strong> aire fresco en las montañas del norte, plantaciones de café orgánico y vegetación virgen.</li>
+            </ul>
+            <p style="font-size: 0.86rem; color: var(--c-teal-deep); font-weight: 600; margin-top: 10px; margin-bottom: 0;">
+              Estas dos zonas son exactamente las dos bases estratégicas elegidas para el alojamiento en Bali en la Ruta B de este proyecto.
+            </p>
+          </div>
+        </div>
+
+        <div class="traveler-compare-photos">
+          <figure style="margin: 0; background: var(--c-sand); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-light);">
+            <img src="{get_img("tirta_empul")}" alt="Tirta Empul masificado" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+            <figcaption style="padding: 8px 12px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;"><strong>Tirta Empul:</strong> colas de turistas para la foto de rigor en el estanque sagrado, cuestionado por Traveler.</figcaption>
+          </figure>
+          <figure style="margin: 0; background: var(--c-sand); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-light);">
+            <img src="{get_img("pura_mengening")}" alt="Pura Mengening, alternativa íntima" style="width: 100%; height: 160px; object-fit: cover; display: block;">
+            <figcaption style="padding: 8px 12px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;"><strong>Pura Mengening:</strong> la alternativa del itinerario de este viaje, manantiales sagrados en plena intimidad.</figcaption>
+          </figure>
+        </div>
+
+        <p class="source-note" style="margin-top: 14px; margin-bottom: 0;">Referencia: Condé Nast Traveler España, reportaje de investigación «Bali sin Instagram (y sin estos lugares que puedes evitar)».</p>
+      </div>
     </section>
   </div>
 
@@ -4174,8 +4274,8 @@ footer.clean-footer {{
             <p>Muchas webs de viajes afirman que España tiene entrada libre de visado durante 30 días en Indonesia. Sin embargo la normativa vigente más autorizada (Perpres 95/2024 sobre exención de visado) redujo esa lista de 169 a solo 16 países, casi todos del sudeste asiático, y España no figura en ella (confirmado en evisa.imigrasi.go.id). Conclusión práctica: como españoles hace falta un visado de llegada (VOA) o su versión electrónica (e-VOA). Conviene volver a comprobarlo poco antes del viaje por si cambia de nuevo.</p>
           </div>
           <p><strong>VOA / e-VOA:</strong> precio oficial de 500.000 IDR (unos 35 USD), visado de entrada única válido 90 días con estancia permitida de 30, prorrogable una vez por 30 días más (total 1.000.000 IDR y 60 días). Se solicita online en evisa.imigrasi.go.id o directamente a la llegada. Base legal: Reglamento PNBP nº45/2024, en vigor desde el 17 de diciembre de 2024.</p>
-          <p><strong>Tarjeta electrónica de llegada:</strong> plataforma unificada "All Indonesia", obligatoria y gratuita, solo se puede rellenar dentro de los 3 días previos al vuelo y genera un código QR. Aviso de fraude: usar solo dominios oficiales terminados en .go.id (allindonesia.imigrasi.go.id o ecd.beacukai.go.id); existen webs falsas que cobran por un trámite gratuito.</p>
-          <p><strong>Tasa turística de Bali:</strong> 150.000 IDR (9 a 10 USD) por persona, pago único para toda la estancia en Bali, es una tasa provincial que no aplica en Java ni en Komodo/Flores. Se paga en el portal oficial lovebali.baliprov.go.id (tarjeta, transferencia o QRIS) y el comprobante llega por email, conviene guardarlo en varios sitios. Es un pago aparte del VOA, con su propio portal y su propio recibo. En 2026 se ha reforzado el control con inspecciones puntuales en Tanah Lot, Uluwatu, Besakih y Tegallalang, y cerca del aeropuerto.</p>
+          <p><strong>Tarjeta electrónica de llegada (App All Indonesia):</strong> la Dirección General de Inmigración exige a todos los viajeros que accedan por Bali (Ngurah Rai · DPS), Yakarta (Soekarno-Hatta · CGK), Surabaya (Juanda) o el puerto de Batam completar la declaración unificada mediante la aplicación oficial gratuita <strong>All Indonesia</strong> (disponible en Google Play Store para Android y App Store para iPhone) o en el portal oficial <code>allindonesia.imigrasi.go.id</code>. Tal como destaca Condé Nast Traveler, este nuevo trámite digital unifica en un solo formulario y código QR inmigración, aduana electrónica (antiguo formulario ECD), sanidad y cuarentena. Se puede cumplimentar como máximo dentro de los <strong>3 días previos al vuelo</strong>. Aviso de fraude: utilizar únicamente dominios oficiales terminados en <code>.go.id</code>; existen plataformas comerciales fraudulentas que cobran por este trámite gratuito.</p>
+          <p><strong>Tasa turística y directrices de civismo en Bali:</strong> 150.000 IDR (unos 8 a 9 euros) por persona, pago único oficial en el portal <code>lovebali.baliprov.go.id</code> (tarjeta o QRIS, guardando el comprobante digital). Condé Nast Traveler recuerda además que el gobierno provincial de Bali ha endurecido las directrices para visitantes internacionales: es obligatorio vestir con decoro y respeto (sarong cubriendo hombros y rodillas en templos y recintos sagrados), contratar guías con licencia oficial para excursiones naturales o culturales y respetar escrupulosamente las ceremonias religiosas y ofrendas cotidianas.</p>
           <p><strong>Overstay (exceder la estancia permitida):</strong> la multa es de 1.000.000 IDR por día y por persona, hasta un máximo de 60 días; superado ese margen ya no es una multa administrativa sino deportación y una posible prohibición de reentrada. Conviene llevar la cuenta exacta de los 30 días desde el sello de entrada, sobre todo teniendo en cuenta que el itinerario cruza varias veces de isla y de aeropuerto.</p>
           <p><strong>Aeropuerto de Komodo (Labuan Bajo):</strong> el aeropuerto Komodo (LBJ) opera solo vuelos domésticos, así que el e-VOA no se sella ahí. El trámite de entrada (e-VOA y el escaneo del pasaporte) se hace en el primer aeropuerto internacional de llegada a Indonesia (Yakarta, Denpasar/Bali u otro punto de entrada internacional), y el vuelo a Labuan Bajo se toma después como vuelo interno, ya con el visado en regla.</p>
         </div>
