@@ -64,6 +64,12 @@ ITEMS = [
     ("bebek_betutu", "Bebek betutu, pato especiado balinés", "destino"),
     ("sate_lilit", "Sate lilit, brochetas balinesas de pescado especiado", "destino"),
     ("kopi", "Mercado tradicional de café en Indonesia", "destino"),
+
+    # Apoyo visual de las secciones de logistica y de criterio
+    ("avion_sq", "Airbus A350 de Singapore Airlines en Changi", "destino"),
+    ("gili_fiesta", "Noche de fiesta en Gili Trawangan (descartado)", "destino"),
+    ("kelingking", "Kelingking Beach en Nusa Penida (descartado)", "destino"),
+    ("kuta_comercial", "Centro comercial Beachwalk en Kuta (descartado)", "destino"),
 ]
 
 cache = {}

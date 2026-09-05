@@ -219,6 +219,137 @@ SCROLL_SCENES = read_source("scroll-scenes.html")
 SCROLL_CSS = read_source("scroll-motion.css")
 SCROLL_JS = read_source("scroll-motion.js")
 
+# =============================================================================
+# DIAGRAMA DE LAS OPCIONES AEREAS
+# Cada ruta se dibuja como una tira de nodos: el tren en trazo discontinuo y
+# los vuelos en trazo continuo, con la escala marcada en un color distinto.
+# Es un grafico de informacion generado aqui, no una fotografia.
+# =============================================================================
+RUTAS_AEREAS = [
+    {
+        "estado": "buena",
+        "titulo": "Singapore Airlines desde Barcelona",
+        "resumen": "Una sola escala, corta, y equipaje facturado hasta Bali.",
+        "nodos": [
+            {"sigla": "ZAZ", "nombre": "Zaragoza", "tipo": "origen"},
+            {"sigla": "BCN", "nombre": "Barcelona", "tipo": "enlace", "tramo": "AVE directo", "dato": "1 h 25 min"},
+            {"sigla": "SIN", "nombre": "Singapur", "tipo": "escala", "tramo": "Singapore Airlines", "dato": "Escala corta"},
+            {"sigla": "DPS", "nombre": "Bali", "tipo": "destino", "tramo": "Conexión directa", "dato": "2 h 40 min"},
+        ],
+        "claves": [
+            "El equipaje va facturado hasta el destino final.",
+            "Ante una incidencia, la reubicación es inmediata por ser billete único.",
+            "Desde el 27 de octubre de 2026 vuela Singapur, Barcelona y Madrid con el mismo avión.",
+        ],
+    },
+    {
+        "estado": "buena",
+        "titulo": "Qatar Airways o Emirates desde Madrid",
+        "resumen": "Escala cómoda en Oriente Medio y llegada a Bali por la tarde.",
+        "nodos": [
+            {"sigla": "ZAZ", "nombre": "Zaragoza", "tipo": "origen"},
+            {"sigla": "MAD", "nombre": "Madrid", "tipo": "enlace", "tramo": "AVE a Atocha", "dato": "1 h 15 min"},
+            {"sigla": "DOH", "nombre": "Doha o Dubái", "tipo": "escala", "tramo": "Qatar o Emirates", "dato": "Escala de 2 a 3 h"},
+            {"sigla": "DPS", "nombre": "Bali", "tipo": "destino", "tramo": "Vuelo directo", "dato": "Llegada por la tarde"},
+        ],
+        "claves": [
+            "Hay que contar el enlace de Atocha a la T4 de Barajas.",
+            "Para la Ruta A se compra un billete multidestino: se entra por Java y se sale por Bali.",
+        ],
+    },
+    {
+        "estado": "mala",
+        "titulo": "Volar a Yakarta y comprar los domésticos aparte",
+        "resumen": "El ahorro aparente se lo comen las maletas y el cambio de terminal.",
+        "nodos": [
+            {"sigla": "ZAZ", "nombre": "Zaragoza", "tipo": "origen"},
+            {"sigla": "CGK", "nombre": "Yakarta", "tipo": "escala", "tramo": "Vuelo internacional", "dato": "De 100 a 150 € menos"},
+            {"sigla": "T1", "nombre": "Cambio de terminal", "tipo": "aviso", "tramo": "Maletas y seguridad otra vez", "dato": "4 h de margen"},
+            {"sigla": "DPS", "nombre": "Bali o Flores", "tipo": "destino", "tramo": "Low cost por separado", "dato": "25 a 35 € por maleta"},
+        ],
+        "claves": [
+            "La diferencia de precio se evapora al sumar los domésticos y el equipaje facturado.",
+            "Se pierde medio día a la ida y medio a la vuelta de un viaje de 11 noches.",
+        ],
+    },
+    {
+        "estado": "mala",
+        "titulo": "Aerolíneas chinas con doble escala larga",
+        "resumen": "Bajan de 750 € a costa de estirar el viaje más allá de las 32 horas.",
+        "nodos": [
+            {"sigla": "ZAZ", "nombre": "Zaragoza", "tipo": "origen"},
+            {"sigla": "PEK", "nombre": "Pekín o Cantón", "tipo": "aviso", "tramo": "Air China o China Eastern", "dato": "Escala de 10 a 16 h"},
+            {"sigla": "DPS", "nombre": "Bali", "tipo": "destino", "tramo": "Segundo vuelo largo", "dato": "Más de 32 h en total"},
+        ],
+        "claves": [
+            "El cansancio se paga con los dos primeros días de viaje en baja forma.",
+        ],
+    },
+]
+
+
+def render_ruta_svg(nodos):
+    """Dibuja una ruta como tira horizontal de nodos conectados."""
+    ancho, alto = 1000, 132
+    margen = 62
+    paso = (ancho - margen * 2) / (len(nodos) - 1)
+    y = 52
+    colores = {"origen": "#0f766e", "enlace": "#0f766e", "escala": "#4f46e5",
+               "destino": "#be123c", "aviso": "#b45309"}
+    partes = [f'<svg class="ruta-svg" viewBox="0 0 {ancho} {alto}" role="img" preserveAspectRatio="xMidYMid meet">']
+    # Trazos entre nodos: el primer salto es en tren, el resto en avion
+    for i in range(len(nodos) - 1):
+        x1, x2 = margen + paso * i, margen + paso * (i + 1)
+        tren = nodos[i + 1].get("tramo", "").startswith("AVE")
+        guion = ' stroke-dasharray="7 6"' if tren else ""
+        partes.append(
+            f'<line x1="{x1 + 15:.0f}" y1="{y}" x2="{x2 - 15:.0f}" y2="{y}" '
+            f'stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"{guion}/>'
+        )
+        medio = (x1 + x2) / 2
+        partes.append(
+            f'<text x="{medio:.0f}" y="{y - 15}" text-anchor="middle" class="ruta-tramo">'
+            f'{nodos[i + 1].get("tramo", "")}</text>'
+        )
+        partes.append(
+            f'<text x="{medio:.0f}" y="{y + 26}" text-anchor="middle" class="ruta-dato">'
+            f'{nodos[i + 1].get("dato", "")}</text>'
+        )
+    # Nodos
+    for i, n in enumerate(nodos):
+        x = margen + paso * i
+        color = colores.get(n["tipo"], "#0f766e")
+        relleno = color if n["tipo"] in ("origen", "destino") else "#ffffff"
+        texto = "#ffffff" if n["tipo"] in ("origen", "destino") else color
+        partes.append(f'<circle cx="{x:.0f}" cy="{y}" r="15" fill="{relleno}" stroke="{color}" stroke-width="2.5"/>')
+        partes.append(f'<text x="{x:.0f}" y="{y + 4}" text-anchor="middle" class="ruta-sigla" fill="{texto}">{n["sigla"]}</text>')
+        partes.append(f'<text x="{x:.0f}" y="{y + 48}" text-anchor="middle" class="ruta-lugar">{n["nombre"]}</text>')
+    partes.append('</svg>')
+    return "".join(partes)
+
+
+def render_rutas_aereas():
+    tarjetas = []
+    for r in RUTAS_AEREAS:
+        buena = r["estado"] == "buena"
+        marca = "Recomendada" if buena else "Descartada"
+        claves = "".join(f'<li>{k}</li>' for k in r["claves"])
+        tarjetas.append(
+            f'<article class="ruta-aerea ruta-{r["estado"]}">'
+            f'<div class="ruta-cabecera">'
+            f'<span class="ruta-marca">{marca}</span>'
+            f'<h3 class="ruta-titulo">{r["titulo"]}</h3>'
+            f'<p class="ruta-resumen">{r["resumen"]}</p>'
+            f'</div>'
+            f'<div class="ruta-lienzo">{render_ruta_svg(r["nodos"])}</div>'
+            f'<ul class="ruta-claves">{claves}</ul>'
+            f'</article>'
+        )
+    return "".join(tarjetas)
+
+
+rutas_aereas_html = render_rutas_aereas()
+
 html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -755,6 +886,237 @@ h1, h2, h3, .font-serif {{
   line-height: 1.68;
   color: var(--text-body);
   margin-bottom: 12px;
+}}
+
+/* =========================================================
+   DESTINOS DESCARTADOS: foto a la izquierda y motivo a la
+   derecha, para que se vea de qué se está hablando.
+   ========================================================= */
+.descartes-grid {{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}}
+
+.descarte-card {{
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  background: var(--c-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}}
+
+.descarte-foto {{
+  position: relative;
+  background: var(--c-sand);
+  min-height: 232px;
+}}
+
+.descarte-foto img {{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Los descartes se muestran algo apagados: ilustran, no invitan */
+  filter: saturate(0.82);
+}}
+
+.descarte-cuerpo {{
+  padding: 22px 26px;
+}}
+
+.descarte-marca {{
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--c-peach);
+  color: var(--c-coral-dark);
+  margin-bottom: 9px;
+}}
+
+.descarte-titulo {{
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.4rem;
+  color: var(--text-title);
+  margin-bottom: 5px;
+}}
+
+.descarte-motivo {{
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--c-coral-dark);
+  margin-bottom: 13px;
+}}
+
+.descarte-lista {{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}}
+
+.descarte-lista li {{
+  position: relative;
+  padding-left: 19px;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: var(--text-body);
+}}
+
+.descarte-lista li::before {{
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 9px;
+  width: 7px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c-coral-dark);
+}}
+
+@media (max-width: 820px) {{
+  .descarte-card {{ grid-template-columns: 1fr; }}
+  .descarte-foto {{ min-height: 0; height: 196px; }}
+  .descarte-cuerpo {{ padding: 19px 18px; }}
+  .descarte-titulo {{ font-size: 1.22rem; }}
+}}
+
+/* =========================================================
+   OPCIONES AEREAS: una tarjeta por ruta, con la tira de
+   nodos dibujada en SVG en lugar de parrafos seguidos.
+   ========================================================= */
+.rutas-aereas {{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}}
+
+.ruta-aerea {{
+  background: var(--c-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 24px 26px 20px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--c-teal);
+}}
+
+.ruta-aerea.ruta-mala {{
+  border-left-color: var(--c-coral-dark);
+  background: #fffdfc;
+}}
+
+.ruta-marca {{
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--c-teal);
+  margin-bottom: 10px;
+}}
+
+.ruta-mala .ruta-marca {{
+  background: var(--c-peach);
+  color: var(--c-coral-dark);
+}}
+
+.ruta-titulo {{
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.34rem;
+  line-height: 1.2;
+  color: var(--text-title);
+  margin-bottom: 6px;
+}}
+
+.ruta-resumen {{
+  font-size: 0.95rem;
+  color: var(--text-body);
+  margin-bottom: 4px;
+}}
+
+/* En pantallas estrechas la tira se desplaza en horizontal dentro de su caja */
+.ruta-lienzo {{
+  overflow-x: auto;
+  margin: 6px -6px 10px;
+  padding: 0 6px;
+}}
+
+.ruta-svg {{
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+}}
+
+.ruta-sigla {{
+  font-size: 12px;
+  font-weight: 800;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: 0.02em;
+}}
+
+.ruta-lugar {{
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--text-title);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}}
+
+.ruta-tramo {{
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: var(--text-body);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}}
+
+.ruta-dato {{
+  font-size: 11.5px;
+  fill: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}}
+
+.ruta-claves {{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-light);
+}}
+
+.ruta-claves li {{
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-body);
+}}
+
+.ruta-claves li::before {{
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-teal);
+}}
+
+.ruta-mala .ruta-claves li::before {{ background: var(--c-coral-dark); }}
+
+@media (max-width: 600px) {{
+  .ruta-aerea {{ padding: 19px 17px 17px; }}
+  .ruta-titulo {{ font-size: 1.16rem; }}
 }}
 
 /* Nota de procedencia al pie de una tarjeta de la guia */
@@ -2343,6 +2705,7 @@ footer.clean-footer {{
                 </div>
               </div>
               <div class="day-info-grid">
+                <div class="info-item"><strong>Por qué el amanecer exige dormir a bordo:</strong><span>Desde enero de 2026 la capitanía de Labuan Bajo prohíbe la navegación nocturna de barcos turísticos, tras el naufragio del KM Putri Sakinah en el estrecho de Padar. Ya no se puede salir de madrugada del puerto para llegar al alba: la única vía legal es fondear la tarde anterior cerca de la isla, como hace este itinerario. Eso sí, la cima se comparte: en temporada alta se han contado más de cien barcos fondeados para el amanecer.</span></div>
                 <div class="info-item"><strong>Snorkel somero:</strong><span>Arrecifes a apenas 1 o 2 metros de profundidad, ideales para ver colores vivos sin botella.</span></div>
                 <div class="info-item"><strong>Protección:</strong><span>Camiseta de licra UV50 y crema biodegradable reef-safe respetuosa con corales.</span></div>
                 <div class="info-item"><strong>Subida al mirador:</strong><span>Entre 700 y 1.000 escalones según la fuente (815 es la cifra más citada), 20 a 45 minutos de subida. Sin apenas sombra, por lo que subir al amanecer es muy recomendable.</span></div>
@@ -2838,6 +3201,7 @@ footer.clean-footer {{
                 </div>
               </div>
               <div class="day-info-grid">
+                <div class="info-item"><strong>Por qué el amanecer exige dormir a bordo:</strong><span>Desde enero de 2026 la capitanía de Labuan Bajo prohíbe la navegación nocturna de barcos turísticos, tras el naufragio del KM Putri Sakinah en el estrecho de Padar. Ya no se puede salir de madrugada del puerto para llegar al alba: la única vía legal es fondear la tarde anterior cerca de la isla, como hace este itinerario. Eso sí, la cima se comparte: en temporada alta se han contado más de cien barcos fondeados para el amanecer.</span></div>
                 <div class="info-item"><strong>Vistas icónicas:</strong><span>El sendero de Padar tiene entre 700 y 1.000 escalones de piedra según la fuente (815 es la cifra más citada); subir al alba evita el calor.</span></div>
                 <div class="info-item"><strong>Snorkel:</strong><span>Corales sanos y peces tropicales a muy pocos metros de la orilla de Pink Beach.</span></div>
               </div>
@@ -3380,58 +3744,85 @@ footer.clean-footer {{
     <section class="section" id="seccion-vuelos">
       <div class="section-head">
         <span class="section-tag">Logística aérea</span>
-        <h2>Opciones de vuelo: Recomendadas vs descartadas</h2>
-        <p>Cómo volar desde Zaragoza optimizando vuestro tiempo de vacaciones y evitando falsos ahorros engañosos.</p>
+        <h2>Cómo volar desde Zaragoza</h2>
+        <p>Dos formas sensatas de llegar y dos que parecen más baratas pero cuestan días de viaje. Cada tira muestra el recorrido completo, con el tren en trazo discontinuo y los vuelos en trazo continuo.</p>
       </div>
 
-      <div class="two-panel-grid">
-        <div class="clean-panel panel-recommended">
-          <h3 class="panel-header-title" style="color:var(--c-teal);">✦ Opciones recomendadas (Billete único o multidestino)</h3>
-          <p><strong>1. Singapore Airlines desde Barcelona (BCN - SIN - DPS):</strong></p>
-          <p>AVE directo de Zaragoza Delicias a Barcelona Sants (1 h 25 min). Vuelo de Singapore Airlines con escala técnica corta en Changi (Singapur) y conexión rápida directa a Bali (2 h 40 min). Es una de las mejores aerolíneas del mundo por puntualidad y servicio; el equipaje va facturado hasta destino y ante cualquier contingencia la reubicación es inmediata. Desde el 27 de octubre de 2026, Singapore Airlines opera además una ruta directa Singapur - Barcelona - Madrid (y en sentido inverso) con el mismo avión, su decimoquinto destino en España y su regreso a Madrid tras 22 años de ausencia, lo que en 2027 podría facilitar aún más esta opción para quien salga desde Barcelona.</p>
-          <p><strong>2. Qatar Airways o Emirates desde Madrid (MAD - DOH/DXB - DPS):</strong></p>
-          <p>AVE de Zaragoza a Madrid-Atocha (1 h 15 min) y enlace a Barajas T4. Escala cómoda de 2 a 3 horas en Oriente Medio y llegada directa a Bali la tarde del 22 de abril. Si se elige la <strong>Ruta A (con Java)</strong>, se adquiere un billete multidestino oficial: entrada por Yakarta o Yogyakarta y salida por Denpasar (Bali), pagando una tarifa equivalente.</p>
-        </div>
-
-        <div class="clean-panel panel-discarded">
-          <h3 class="panel-header-title" style="color:var(--c-coral-dark);">✕ Opciones descartadas y por qué</h3>
-          <p><strong>1. El falso ahorro de volar a Yakarta (CGK) y comprar low-costs aparte:</strong></p>
-          <p>Aunque el billete internacional a Yakarta puede aparecer 100 o 150 euros más barato en buscadores, la suma de los vuelos domésticos de ida y vuelta a Bali/Flores más el suplemento por maleta facturada de 20 kg en aerolíneas indonesias como AirAsia o Lion Air (25 a 35 euros por tramo) elimina la diferencia. Además, cambiar de terminal en Yakarta (de T3 internacional a T1/T2 doméstica) exige recoger maletas y pasar de nuevo seguridad, requiriendo un margen mínimo de 4 horas. En un viaje de 11 noches, perder medio día a la ida y medio a la vuelta es un error logístico.</p>
-          <p><strong>2. Vuelos con aerolíneas chinas con dobles escalas largas:</strong></p>
-          <p>Air China o China Eastern ofrecen tarifas que a veces bajan de 750 euros, pero implican escalas de 10 a 16 horas en Pekín o Cantón, estirando el viaje a más de 32 horas de trayecto y generando un cansancio extremo.</p>
-        </div>
+      <div class="guide-photo-strip">
+        <figure>
+          <div class="photo-frame"><img src="{get_img("zaragoza_delicias")}" alt="Tren AVE saliendo de Zaragoza Delicias"></div>
+          <figcaption>El primer tramo siempre es el mismo: AVE desde Zaragoza Delicias.</figcaption>
+        </figure>
+        <figure>
+          <div class="photo-frame"><img src="{get_img("avion_sq")}" alt="Airbus A350 de Singapore Airlines rodando en Changi"></div>
+          <figcaption>El A350 de Singapore Airlines, la opción recomendada.</figcaption>
+        </figure>
+        <figure>
+          <div class="photo-frame"><img src="{get_img("changi_jewel")}" alt="Vórtice de agua en Jewel Changi, Singapur"></div>
+          <figcaption>Escala en Singapur: el vórtice de agua de Jewel Changi.</figcaption>
+        </figure>
+        <figure>
+          <div class="photo-frame"><img src="{get_img("hamad_doha")}" alt="Interior del aeropuerto de Doha"></div>
+          <figcaption>La alternativa, con escala en Doha.</figcaption>
+        </figure>
       </div>
+
+      <div class="rutas-aereas">{rutas_aereas_html}</div>
     </section>
   </div>
 
-  <!-- =======================================================
-       PANTALLA 5: DESTINOS DESCARTADOS Y CRITERIO
-       ======================================================= -->
   <div class="app-screen-view" id="app-view-criterio">
     <section class="section" id="seccion-criterio">
       <div class="section-head">
         <span class="section-tag">Criterio y autenticidad</span>
-        <h2>Por qué se descartan otros destinos populares</h2>
-        <p>Razones fundadas para no dispersar el viaje en lugares saturados o que no aportan valor frente a Komodo.</p>
+        <h2>Lo que se ha dejado fuera, y por qué</h2>
+        <p>Tres destinos que salen en todas las listas de Bali y que aquí no están. No por capricho: cada uno tiene un motivo concreto, y en dos de los tres el problema no es el sitio sino lo que se ha convertido.</p>
       </div>
 
-      <div class="two-panel-grid">
-        <div class="clean-panel panel-discarded">
-          <h3 class="panel-header-title" style="color:var(--c-coral-dark);">✕ Las islas Gili clásicas (Trawangan, Meno y Air)</h3>
-          <ul>
-            <li><strong>Gili Trawangan:</strong> Famosa por la fiesta nocturna, turismo mochilero ruidoso y alcohol barato. Cero encaje con vuestro perfil.</li>
-            <li><strong>Gili Meno y Air:</strong> Aunque son más tranquilas, gran parte de su arrecife somero está muy deteriorado o blanqueado por el calentamiento y el fondeo constante de barcas. El punto de las estatuas submarinas de Jason deCaires suele ser un hervidero agobiante de turistas flotando con chalecos salvavidas.</li>
-            <li><strong>Logística pesada:</strong> Exigen 2 horas de carretera al puerto de Padang Bai en Bali y otras 2 horas en lancha rápida por el estrecho de Lombok (a menudo con mar muy agitado). Habiendo elegido Komodo, cuyos fondos marinos son de nivel mundial, las Gili tradicionales no aportan nada y quitan dos días enteros de disfrute.</li>
-          </ul>
-        </div>
+      <div class="descartes-grid">
 
-        <div class="clean-panel panel-discarded">
-          <h3 class="panel-header-title" style="color:var(--c-coral-dark);">✕ Nusa Penida y el sur masificado de Bali</h3>
-          <ul>
-            <li><strong>Nusa Penida:</strong> Espectacular en fotografía cenital, pero en tierra sufre un colapso severo: carreteras estrechas de tierra con baches gigantescos, tráfico permanente y colas de hasta 2 horas bajo el sol abrasador para hacerse una foto en el mirador de Kelingking Beach. Además, la mayoría de sus playas tienen un oleaje y corrientes muy peligrosas donde bañarse está desaconsejado.</li>
-            <li><strong>Kuta, Seminyak y Canggu:</strong> El epicentro del turismo masivo occidental: discotecas ruidosas, centros comerciales y atascos kilométricos de motocicletas. No tienen nada que ver con la auténtica cultura balinesa de Sidemen o Munduk.</li>
-          </ul>
-        </div>
+        <article class="descarte-card">
+          <div class="descarte-foto"><img src="{get_img("gili_fiesta")}" alt="Fiesta nocturna en un bar de Gili Trawangan"></div>
+          <div class="descarte-cuerpo">
+            <span class="descarte-marca">Descartado</span>
+            <h3 class="descarte-titulo">Las islas Gili</h3>
+            <p class="descarte-motivo">Dos días enteros de viaje para un fondo marino peor que el que ya vais a ver.</p>
+            <ul class="descarte-lista">
+              <li><strong>Trawangan</strong> vive de la fiesta nocturna y el alcohol barato.</li>
+              <li><strong>Meno y Air</strong> son tranquilas, pero buena parte de su arrecife somero está blanqueado por el calentamiento y el fondeo continuo de barcas.</li>
+              <li>Llegar cuesta <strong>2 h de carretera hasta Padang Bai y 2 h de lancha</strong> por el estrecho de Lombok, que suele estar movido.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="descarte-card">
+          <div class="descarte-foto"><img src="{get_img("kelingking")}" alt="El acantilado de Kelingking Beach en Nusa Penida"></div>
+          <div class="descarte-cuerpo">
+            <span class="descarte-marca">Descartado</span>
+            <h3 class="descarte-titulo">Nusa Penida</h3>
+            <p class="descarte-motivo">Espectacular en la foto. En tierra, un día entero de coche malo y cola.</p>
+            <ul class="descarte-lista">
+              <li>Esta es la vista de <strong>Kelingking</strong>, y es real. Lo que no sale en la foto es la <strong>cola de hasta 2 horas al sol</strong> para asomarse a hacerla.</li>
+              <li>Carreteras estrechas y con baches grandes, tráfico constante y trayectos lentos entre miradores.</li>
+              <li>En la mayoría de sus playas el <strong>baño está desaconsejado</strong> por el oleaje y las corrientes.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="descarte-card">
+          <div class="descarte-foto"><img src="{get_img("kuta_comercial")}" alt="Centro comercial Beachwalk junto a la playa de Kuta"></div>
+          <div class="descarte-cuerpo">
+            <span class="descarte-marca">Descartado</span>
+            <h3 class="descarte-titulo">Kuta, Seminyak y Canggu</h3>
+            <p class="descarte-motivo">Es el sur que este viaje evita a propósito desde el primer día.</p>
+            <ul class="descarte-lista">
+              <li>Centros comerciales, discotecas y atascos de motos en cadena.</li>
+              <li>La foto es la entrada de un centro comercial <strong>a pie de playa</strong>, con flamencos y piñas de plástico. Eso es hoy Kuta.</li>
+              <li>Por eso los dos itinerarios salen del aeropuerto <strong>directos hacia el este o el norte</strong>, sin pisar la zona.</li>
+            </ul>
+          </div>
+        </article>
+
       </div>
     </section>
   </div>
@@ -3464,21 +3855,6 @@ footer.clean-footer {{
         <p>Información contrastada en varias fuentes (oficiales, médicas y de viajeros) para preparar el viaje sin sorpresas. Investigación realizada en 2026: los datos de visado, tasas y salud conviene reconfirmarlos 2 o 3 meses antes de volar, ya que Indonesia cambia esta normativa con cierta frecuencia.</p>
       </div>
 
-      <div class="guide-photo-strip">
-        <figure>
-          <div class="photo-frame"><img src="{get_img("zaragoza_delicias")}" alt="Tren AVE saliendo de Zaragoza Delicias"></div>
-          <figcaption>El primer tramo: AVE desde Zaragoza Delicias hasta el aeropuerto de salida.</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-frame"><img src="{get_img("changi_jewel")}" alt="Vortice de agua en Jewel Changi, Singapur"></div>
-          <figcaption>Escala habitual vía Singapur: el vórtice de agua de Jewel Changi.</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-frame"><img src="{get_img("hamad_doha")}" alt="Interior del aeropuerto de Doha"></div>
-          <figcaption>Alternativa de escala vía Doha, con Qatar Airways.</figcaption>
-        </figure>
-      </div>
-
       <div class="guide-grid">
         <div class="clean-panel guide-card">
           <div class="guide-card-head">
@@ -3487,17 +3863,17 @@ footer.clean-footer {{
           </div>
           <div class="guide-fact-row">
             <span class="tag-label">15 de agosto de 2026</span>
-            <span class="tag-label">Magnitud 7,7 a 7,8</span>
-            <span class="tag-label espigon">Afecta a Labuan Bajo</span>
+            <span class="tag-label">Magnitud 7,8</span>
+            <span class="tag-label espigon">Ya normalizado</span>
           </div>
           <div class="discrepancy-box">
-            <span class="dx-label">Verificar 2 o 3 meses antes</span>
-            <p>Es el asunto de actualidad que más directamente puede afectar a este viaje. Un terremoto de magnitud 7,7 a 7,8 con epicentro frente a la costa norte de Nusa Tenggara Oriental, a unos 68 km al noroeste de Ende, sacudió Flores en la madrugada del 15 de agosto de 2026 y generó un pequeño tsunami de unos 30 cm registrado en Labuan Bajo. Los mayores daños se concentraron en las regencias de Manggarai y Manggarai Oriental, es decir, junto a la propia Labuan Bajo.</p>
+            <span class="dx-label">Situación a día de hoy</span>
+            <p>Un terremoto de magnitud 7,8 según el USGS (7,7 para la agencia indonesia BMKG) sacudió Flores en la madrugada del 15 de agosto de 2026, con epicentro en el mar a 64 km al noroeste de Ende. Causó 129 muertos y más de 1.700 heridos, y fue el más letal de Indonesia desde 2022. Labuan Bajo quedó a unos 165 km del epicentro y el tsunami allí se quedó en 30 centímetros.</p>
           </div>
-          <p><strong>Qué tocó de lo que usa el itinerario:</strong> el aeropuerto de Labuan Bajo sufrió daños, los servicios portuarios se suspendieron temporalmente (llegaron a quedar varados cerca de mil turistas en la isla de Padar) y la carretera Trans-Flores quedó cortada en varios puntos por corrimientos de tierra.</p>
-          <p><strong>Situación a comienzos de septiembre de 2026:</strong> la reconstrucción seguía en curso en varias regencias de Flores. El viaje sale ocho meses después, en abril de 2027, así que lo previsible es que la operativa esté normalizada, pero conviene confirmar tres cosas antes de pagar nada no reembolsable: que el aeropuerto de Labuan Bajo opera con normalidad, que el resort elegido y su servicio de lancha están operativos, y que la salida a Padar no tiene restricciones.</p>
-          <p><strong>Cómo comprobarlo:</strong> el estado sismológico en el USGS y en la agencia indonesia BMKG, y la operativa concreta preguntando por escrito al hotel y al operador del barco, que son quienes saben si su muelle y su lancha funcionan.</p>
-          <p class="source-note">Datos sismológicos del Servicio Geológico de Estados Unidos (USGS) y del centro alemán GFZ; cifras de víctimas y daños de agencias internacionales (Reuters, NBC News, NPR) y de organismos de respuesta a desastres.</p>
+          <p><strong>Lo que se restableció, y cuándo:</strong> el puerto reabrió la navegación esa misma tarde, el aeropuerto de Labuan Bajo operó con restricciones por unas grietas en la calle de rodaje y <strong>volvió a la normalidad el 17 de agosto</strong>, y el 21 de agosto se levantaron las últimas restricciones de navegación alrededor de Komodo y Padar. El parque nacional no llegó a cerrar en ningún momento: el 17 de agosto ya recibía más de 2.000 visitantes al día.</p>
+          <p><strong>Lo que sí quedó tocado:</strong> Wae Rebo, Kampung Todo y el lago Kelimutu siguieron cerrados por riesgo de desprendimientos, pero ninguno de los tres está en este itinerario. Entre los hoteles de Labuan Bajo, el Jayakarta sufrió daño estructural y hubo daños leves en AYANA, TA'AKTANA, Meruorah, Luwansa y Sudamala.</p>
+          <p><strong>Qué conviene hacer aun así:</strong> el viaje sale ocho meses después, así que lo previsible es que todo funcione con normalidad. Basta con reconfirmar el vuelo y el alojamiento cerca de la fecha y contratar un seguro que cubra catástrofe natural.</p>
+          <p class="source-note">Datos sismológicos del Servicio Geológico de Estados Unidos (USGS) y de la BMKG indonesia; restablecimiento de aeropuerto y puerto según la Dirección General de Aviación Civil y el KSOP de Labuan Bajo; estado del parque según el Ministerio de Turismo y la agencia Antara.</p>
         </div>
 
         <div class="clean-panel guide-card">
