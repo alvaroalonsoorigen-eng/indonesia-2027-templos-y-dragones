@@ -210,6 +210,15 @@ n_hitos = len(MILESTONES_HISTORIA)
 filtros_historia = render_historia_filters()
 timeline_historia = render_historia_timeline()
 
+# Fuentes de movimiento separadas, incrustadas al reconstruir el HTML autónomo.
+def read_source(filename):
+    with open(os.path.join(BASE, filename), encoding="utf-8") as source:
+        return source.read()
+
+SCROLL_SCENES = read_source("scroll-scenes.html")
+SCROLL_CSS = read_source("scroll-motion.css")
+SCROLL_JS = read_source("scroll-motion.js")
+
 html = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2006,6 +2015,7 @@ footer.clean-footer {{
   color: var(--text-muted);
   font-size: 0.85rem;
 }}
+{SCROLL_CSS}
 </style>
 </head>
 <body>
@@ -2061,13 +2071,16 @@ footer.clean-footer {{
       <div class="stat-chip">Regreso a Zaragoza: <strong>4 mayo 2027</strong></div>
       <div class="stat-chip">Temporada: <strong>Inicio estación seca (óptima)</strong></div>
     </div>
+    <a class="hero-route-link" href="#selector-de-ruta">Ver las rutas directamente <span aria-hidden="true">&nbsp;↗</span></a>
   </div>
 
   <div class="hero-scroll-cue" aria-hidden="true">
-    <span>Las dos rutas</span>
+    <span>Desliza. El viaje empieza aquí.</span>
     <span class="cue-rail"></span>
   </div>
 </header>
+
+{SCROLL_SCENES}
 
 <main class="container">
 
@@ -3787,6 +3800,7 @@ function initMap() {{
   renderDayScrubber();
   renderMapRoute();
   setMapDay(1, false);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }}
 
 function renderDayScrubber() {{
@@ -3937,7 +3951,7 @@ function setMapDay(dayNum, scroll, customTitle) {{
   if (currentCard) {{
     currentCard.classList.add('active-reading');
     if (scroll) {{
-      currentCard.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+      currentCard.scrollIntoView({{ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }});
     }}
   }}
 }}
@@ -3975,7 +3989,10 @@ function syncMapScrollPosition() {{
     }}
   }});
 
-  setMapDay(currentActiveDay, false, currentTitle);
+  // Evitar reconstruir el mismo estado del SVG en cada fotograma de scroll.
+  if (currentActiveDay !== diaSeleccionado || (currentTitle && document.getElementById('mapStatusText').textContent !== currentTitle)) {{
+    setMapDay(currentActiveDay, false, currentTitle);
+  }}
 }}
 
 window.addEventListener('scroll', onWindowScroll, {{ passive: true }});
@@ -3984,6 +4001,9 @@ window.addEventListener('scroll', onWindowScroll, {{ passive: true }});
 // CONMUTACION DE RUTAS (CON JAVA VS SIN JAVA)
 // =======================================================
 function switchRoute(routeId) {{
+  if (window.innerWidth <= 920 && document.body.classList.contains('mobile-secondary-view')) {{
+    switchMobileTab('app-view-ruta', document.getElementById('bn-ruta'));
+  }}
   rutaActiva = routeId;
   document.querySelectorAll('.route-block').forEach(panel => {{
     panel.style.display = 'none';
@@ -4010,6 +4030,7 @@ function switchRoute(routeId) {{
   renderDayScrubber();
   renderMapRoute();
   setMapDay(1, false);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }}
 
 // =======================================================
@@ -4050,12 +4071,14 @@ function switchMobileTab(viewId, btn) {{
       }}
     }}
 
-    window.scrollTo({{ top: 0, behavior: 'smooth' }});
+    document.body.classList.toggle('mobile-secondary-view', viewId !== 'app-view-ruta');
+    if (window.refreshScrollMotion) window.refreshScrollMotion();
+    window.scrollTo({{ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }});
   }} else {{
     // En escritorio simplemente hacemos scroll suave a la seccion
     const target = document.getElementById(viewId);
     if (target) {{
-      target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+      target.scrollIntoView({{ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }});
     }}
   }}
 }}
@@ -4073,64 +4096,20 @@ function showAppScreen(viewId) {{
   switchMobileTab(viewId, btn);
 }}
 
-// Manejo de redimensionado de pantalla para restaurar mapa si pasa de movil a escritorio
+// Conservar la pantalla elegida al girar el móvil o cambiar el ancho de ventana.
 window.addEventListener('resize', () => {{
-  if (window.innerWidth > 920) {{
-    const mapBox = document.getElementById('mapStickyContainer');
-    const desktopCol = document.querySelector('.route-map-col');
-    if (mapBox && desktopCol && !desktopCol.contains(mapBox)) {{
-      desktopCol.appendChild(mapBox);
-    }}
-    document.querySelectorAll('.app-screen-view').forEach(view => {{
-      view.style.display = 'block';
-    }});
-  }}
+  const mobile = window.innerWidth <= 920;
+  const active = document.querySelector('.app-screen-view.active-mobile-view');
+  document.body.classList.toggle('mobile-secondary-view', mobile && active && active.id !== 'app-view-ruta');
+  document.querySelectorAll('.app-screen-view').forEach(view => {{
+    view.style.display = !mobile || view === active ? 'block' : 'none';
+  }});
+  const mapBox = document.getElementById('mapStickyContainer');
+  const destination = mobile && active && active.id === 'app-view-mapa'
+    ? document.getElementById('mobileMapContainerSlot') : document.querySelector('.route-map-col');
+  if (mapBox && destination && !destination.contains(mapBox)) destination.appendChild(mapBox);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }});
-
-// Filtro interactivo de hoteles
-// =======================================================
-// HERO CINEMATICO: parallax del video, desvanecido del
-// titular y barra superior que se vuelve solida
-// =======================================================
-(function initHeroMotion() {{
-  const layer = document.getElementById('heroVideoLayer');
-  const content = document.getElementById('heroMainContent');
-  const bar = document.getElementById('siteTopBar');
-  const video = document.getElementById('heroVideo');
-  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (video) {{
-    // Algunos navegadores ignoran el autoplay hasta que la pestana esta visible
-    const arranca = () => {{ const pr = video.play(); if (pr && pr.catch) pr.catch(() => {{}}); }};
-    if (quieto) {{ video.pause(); }} else {{ arranca(); document.addEventListener('visibilitychange', () => {{ if (!document.hidden) arranca(); }}); }}
-  }}
-
-  let pendiente = false;
-  function pintar() {{
-    const y = window.scrollY || window.pageYOffset || 0;
-    const alto = window.innerHeight || 1;
-    const ancho = window.innerWidth || 1;
-
-    if (layer && !quieto && ancho > 920) {{
-      layer.style.transform = 'translate3d(0, ' + (y * 0.32).toFixed(1) + 'px, 0)';
-    }}
-    if (content && ancho > 920) {{
-      const t = Math.min(1, y / (alto * 0.62));
-      content.style.opacity = String(1 - t);
-      content.style.transform = 'translate3d(0, ' + (t * -46).toFixed(1) + 'px, 0)';
-    }}
-    if (bar) {{
-      bar.classList.toggle('bar-solid', y > alto * 0.7);
-    }}
-    pendiente = false;
-  }}
-
-  window.addEventListener('scroll', () => {{
-    if (!pendiente) {{ pendiente = true; requestAnimationFrame(pintar); }}
-  }}, {{ passive: true }});
-  window.addEventListener('resize', pintar);
-  pintar();
-}})();
 
 // Filtra la cronologia por era historica
 function filterHistoria(era) {{
@@ -4141,6 +4120,7 @@ function filterHistoria(era) {{
     const suya = item.getAttribute('data-era');
     item.style.display = (era === 'todos' || suya === String(era)) ? '' : 'none';
   }});
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }}
 
 // Salta desde el chip de alojamiento de un dia hasta su ficha en la coleccion.
@@ -4155,7 +4135,7 @@ function goToHotel(hotelId, filterCat) {{
     const target = hotelId ? document.getElementById(hotelId)
                            : document.getElementById('seccion-hoteles');
     if (!target) return;
-    target.scrollIntoView({{ behavior: 'smooth', block: hotelId ? 'center' : 'start' }});
+    target.scrollIntoView({{ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: hotelId ? 'center' : 'start' }});
     if (hotelId) {{
       target.classList.remove('hotel-flash');
       void target.offsetWidth;
@@ -4191,34 +4171,16 @@ function filterHotels(category, srcBtn) {{
       }}
     }}
   }});
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }}
 
-// Revelado suave de tarjetas al hacer scroll (con reserva de accesibilidad)
-function initScrollReveal() {{
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion || !('IntersectionObserver' in window)) {{
-    return;
-  }}
-  const targets = document.querySelectorAll('.day-card-single, .hotel-card-item, .clean-panel, .timeline-card');
-  const observer = new IntersectionObserver((entries, obs) => {{
-    entries.forEach(entry => {{
-      if (entry.isIntersecting) {{
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      }}
-    }});
-  }}, {{ threshold: 0.12, rootMargin: '0px 0px -40px 0px' }});
-  targets.forEach(el => {{
-    el.classList.add('reveal-init');
-    observer.observe(el);
-  }});
-}}
-
-// Inicializar el mapa y el revelado al cargar la pagina
+// Inicializar el mapa al cargar la pagina.
 window.addEventListener('DOMContentLoaded', () => {{
   initMap();
-  initScrollReveal();
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }});
+
+{SCROLL_JS}
 </script>
 
 </body>

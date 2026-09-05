@@ -1794,6 +1794,74 @@ footer.clean-footer {
   color: var(--text-muted);
   font-size: 0.85rem;
 }
+/* Se incrusta en index.html. El scroll del navegador conserva su comportamiento. */
+.journey { display: none; }
+.journey.journey-ready { display: block; position: relative; height: 340svh; background: #03181c; }
+.journey-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; color: #fff; }
+.journey-window { position: absolute; inset: 0; overflow: hidden; clip-path: inset(8% 8% round 28px); background: #082f34; }
+.journey-scene { position: absolute; inset: 0; overflow: hidden; opacity: 0; isolation: isolate; }
+.journey-scene:first-child { opacity: 1; }
+.journey-scene img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.journey-scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,17,20,.38), transparent 38%, rgba(2,17,20,.2) 52%, rgba(2,17,20,.88)); }
+.journey-word { position: absolute; top: 15%; left: -3%; z-index: 1; font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(120px, 24vw, 390px); line-height: 1; letter-spacing: -.05em; color: rgba(255,255,255,.20); white-space: nowrap; pointer-events: none; }
+.journey-caption { position: absolute; z-index: 2; left: max(8vw, calc((100vw - 1080px)/2)); right: 8vw; bottom: 17%; }
+.journey-eyebrow { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .14em; margin-bottom: 18px; }
+.journey-caption h2 { color: #fff; font-size: clamp(2.8rem, 6.5vw, 6.6rem); line-height: 1.02; margin: 0 0 18px; letter-spacing: -.025em; text-shadow: 0 2px 24px rgba(0,0,0,.2); }
+.journey-caption em { color: #ffb6a2; font-weight: 400; }
+.journey-caption p { color: rgba(255,255,255,.85); font-size: clamp(.88rem, 1.2vw, 1.1rem); margin: 0; max-width: 480px; }
+.journey-topline, .journey-bottomline { position: absolute; z-index: 5; left: 5%; right: 5%; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: .72rem; }
+.journey-topline { top: 100px; letter-spacing: .05em; }
+.journey-skip, .hero-route-link { color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,.4); border-radius: 100px; padding: 10px 16px; background: rgba(3,24,28,.45); }
+.journey-skip:hover, .hero-route-link:hover { background: #fff; color: #06383c; }
+.journey-skip:focus-visible, .hero-route-link:focus-visible { outline: 3px solid #ffb6a2; outline-offset: 5px; }
+.journey-bottomline { bottom: 70px; font-variant-numeric: tabular-nums; }
+.journey-steps { display: flex; width: min(460px, 50%); gap: 20px; }
+.journey-steps span { flex: 1; position: relative; padding-top: 12px; color: rgba(255,255,255,.7); }
+.journey-steps span::before, .journey-steps i { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,.25); }
+.journey-steps i { background: #ffb6a2; transform: scaleX(0); transform-origin: left; }
+.hero-route-link { display: inline-flex; align-self: center; margin-top: 24px; font-size: .78rem; }
+/* La inclinación de entrada de las tarjetas ensancha su caja y llegaba a
+   provocar barra horizontal en anchos intermedios (46 px a 1024 px). Se
+   recorta con clip, que a diferencia de hidden no rompe el sticky del mapa. */
+html, body { overflow-x: clip; }
+.day-photo-wrap, .hotel-photo-holder { overflow: hidden; }
+.scroll-photo img { height: calc(100% + 72px); max-height: none; position: absolute; top: -36px; transform: translate3d(0,var(--photo-y,0px),0) scale(1.04); }
+.motion-near img { will-change: transform; }
+.motion-ready .reveal-init { opacity: 1; transform: none; }
+.motion-ready .scroll-enter { opacity: var(--enter-opacity,1); translate: 0 var(--enter-y,0px); rotate: var(--enter-tilt,0deg); scale: var(--enter-scale,1); transform-origin: 50% 100%; }
+.motion-ready .scroll-enter:focus-within { opacity: 1; translate: none; rotate: none; scale: none; }
+.motion-ready .section-head h2 { background: linear-gradient(90deg, var(--c-teal-dark) var(--heading-fill,100%), #7faaa8 var(--heading-fill,100%)); background-clip: text; -webkit-background-clip: text; color: transparent; }
+@media (min-width: 1020px) { .routegrid > .route-map-col { top: 88px; } }
+@media (max-width: 920px) {
+  .journey.journey-ready { height: 290svh; }
+  .journey-stage { height: calc(100svh - 78px); }
+  .journey-topline { top: 22px; left: 6%; right: 6%; font-size: .63rem; }
+  .journey-topline > span { max-width: 120px; }
+  .journey-skip { padding: 9px 12px; }
+  .journey-caption { left: 8%; right: 8%; bottom: 23%; }
+  .journey-eyebrow { font-size: .59rem; line-height: 1.6; letter-spacing: .08em; margin-bottom: 14px; }
+  .journey-caption h2 { font-size: clamp(2.4rem,10.7vw,4.5rem); }
+  .journey-caption p { max-width: 290px; line-height: 1.55; }
+  .journey-word { top: 24%; font-size: 31vw; }
+  .journey-bottomline { left: 8%; right: 8%; bottom: 48px; gap: 22px; font-size: .62rem; }
+  .journey-steps { width: auto; flex: 1; gap: 12px; }
+  .journey-direction { display: none; }
+  .mobile-secondary-view .hero, .mobile-secondary-view .journey { display: none; }
+  .mobile-secondary-view main.container { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey.journey-ready { display: none; }
+  .hero-video-layer, .hero-main-content, .hero-main-content > *, .stat-chip { transform: none !important; opacity: 1 !important; }
+  .scroll-photo img { height: 100%; top: 0; transform: none !important; }
+  .scroll-enter { opacity: 1 !important; translate: none !important; rotate: none !important; scale: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  .journey, .hero-route-link { display: none !important; }
+  .scroll-enter { opacity: 1 !important; translate: none !important; rotate: none !important; scale: none !important; }
+  .scroll-photo img { transform: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1849,13 +1917,55 @@ footer.clean-footer {
       <div class="stat-chip">Regreso a Zaragoza: <strong>4 mayo 2027</strong></div>
       <div class="stat-chip">Temporada: <strong>Inicio estación seca (óptima)</strong></div>
     </div>
+    <a class="hero-route-link" href="#selector-de-ruta">Ver las rutas directamente <span aria-hidden="true">&nbsp;↗</span></a>
   </div>
 
   <div class="hero-scroll-cue" aria-hidden="true">
-    <span>Las dos rutas</span>
+    <span>Desliza. El viaje empieza aquí.</span>
     <span class="cue-rail"></span>
   </div>
 </header>
+
+<section class="journey" id="paisajes" aria-label="Un adelanto del viaje">
+  <div class="journey-stage">
+    <div class="journey-window">
+      <article class="journey-scene" data-photo="dia-a-2">
+        <img alt="Las estupas de Borobudur en Java" decoding="async">
+        <span class="journey-word" aria-hidden="true">Java</span>
+        <div class="journey-caption">
+          <span class="journey-eyebrow">01 / La isla de los templos · Ruta A</span>
+          <h2>Donde despierta<br><em>la historia.</em></h2>
+          <p>Las estupas de Borobudur. El primer asombro.</p>
+        </div>
+      </article>
+      <article class="journey-scene" data-photo="dia-a-6" aria-hidden="true">
+        <img alt="Las bahías de la isla de Padar en Komodo" decoding="async">
+        <span class="journey-word" aria-hidden="true">Komodo</span>
+        <div class="journey-caption">
+          <span class="journey-eyebrow">02 / El archipiélago salvaje · Ambas rutas</span>
+          <h2>Perder la noción<br><em>del tiempo.</em></h2>
+          <p>Tres noches de goleta. Islas, dragones y arrecifes.</p>
+        </div>
+      </article>
+      <article class="journey-scene" data-photo="dia-a-10" aria-hidden="true">
+        <img alt="El volcán Agung sobre los arrozales de Bali" decoding="async">
+        <span class="journey-word" aria-hidden="true">Bali</span>
+        <div class="journey-caption">
+          <span class="journey-eyebrow">03 / El verde infinito · Ambas rutas</span>
+          <h2>Y respirar<br><em>otro mundo.</em></h2>
+          <p>Sidemen, a los pies del Agung. El Bali que buscamos.</p>
+        </div>
+      </article>
+    </div>
+    <div class="journey-topline"><span>Dos rutas. Un archipiélago.</span><a href="#selector-de-ruta" class="journey-skip">Ir a las rutas <span aria-hidden="true">↗</span></a></div>
+    <div class="journey-bottomline" aria-hidden="true">
+      <span class="journey-count">01 / 03</span>
+      <div class="journey-steps"><span><i></i>Java</span><span><i></i>Komodo</span><span><i></i>Bali</span></div>
+      <span class="journey-direction">Sigue explorando ↓</span>
+    </div>
+  </div>
+</section>
+
 
 <main class="container">
 
@@ -3575,6 +3685,7 @@ function initMap() {
   renderDayScrubber();
   renderMapRoute();
   setMapDay(1, false);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }
 
 function renderDayScrubber() {
@@ -3725,7 +3836,7 @@ function setMapDay(dayNum, scroll, customTitle) {
   if (currentCard) {
     currentCard.classList.add('active-reading');
     if (scroll) {
-      currentCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      currentCard.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }
   }
 }
@@ -3763,7 +3874,10 @@ function syncMapScrollPosition() {
     }
   });
 
-  setMapDay(currentActiveDay, false, currentTitle);
+  // Evitar reconstruir el mismo estado del SVG en cada fotograma de scroll.
+  if (currentActiveDay !== diaSeleccionado || (currentTitle && document.getElementById('mapStatusText').textContent !== currentTitle)) {
+    setMapDay(currentActiveDay, false, currentTitle);
+  }
 }
 
 window.addEventListener('scroll', onWindowScroll, { passive: true });
@@ -3772,6 +3886,9 @@ window.addEventListener('scroll', onWindowScroll, { passive: true });
 // CONMUTACION DE RUTAS (CON JAVA VS SIN JAVA)
 // =======================================================
 function switchRoute(routeId) {
+  if (window.innerWidth <= 920 && document.body.classList.contains('mobile-secondary-view')) {
+    switchMobileTab('app-view-ruta', document.getElementById('bn-ruta'));
+  }
   rutaActiva = routeId;
   document.querySelectorAll('.route-block').forEach(panel => {
     panel.style.display = 'none';
@@ -3798,6 +3915,7 @@ function switchRoute(routeId) {
   renderDayScrubber();
   renderMapRoute();
   setMapDay(1, false);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }
 
 // =======================================================
@@ -3838,12 +3956,14 @@ function switchMobileTab(viewId, btn) {
       }
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.classList.toggle('mobile-secondary-view', viewId !== 'app-view-ruta');
+    if (window.refreshScrollMotion) window.refreshScrollMotion();
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   } else {
     // En escritorio simplemente hacemos scroll suave a la seccion
     const target = document.getElementById(viewId);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }
   }
 }
@@ -3861,64 +3981,20 @@ function showAppScreen(viewId) {
   switchMobileTab(viewId, btn);
 }
 
-// Manejo de redimensionado de pantalla para restaurar mapa si pasa de movil a escritorio
+// Conservar la pantalla elegida al girar el móvil o cambiar el ancho de ventana.
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 920) {
-    const mapBox = document.getElementById('mapStickyContainer');
-    const desktopCol = document.querySelector('.route-map-col');
-    if (mapBox && desktopCol && !desktopCol.contains(mapBox)) {
-      desktopCol.appendChild(mapBox);
-    }
-    document.querySelectorAll('.app-screen-view').forEach(view => {
-      view.style.display = 'block';
-    });
-  }
+  const mobile = window.innerWidth <= 920;
+  const active = document.querySelector('.app-screen-view.active-mobile-view');
+  document.body.classList.toggle('mobile-secondary-view', mobile && active && active.id !== 'app-view-ruta');
+  document.querySelectorAll('.app-screen-view').forEach(view => {
+    view.style.display = !mobile || view === active ? 'block' : 'none';
+  });
+  const mapBox = document.getElementById('mapStickyContainer');
+  const destination = mobile && active && active.id === 'app-view-mapa'
+    ? document.getElementById('mobileMapContainerSlot') : document.querySelector('.route-map-col');
+  if (mapBox && destination && !destination.contains(mapBox)) destination.appendChild(mapBox);
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 });
-
-// Filtro interactivo de hoteles
-// =======================================================
-// HERO CINEMATICO: parallax del video, desvanecido del
-// titular y barra superior que se vuelve solida
-// =======================================================
-(function initHeroMotion() {
-  const layer = document.getElementById('heroVideoLayer');
-  const content = document.getElementById('heroMainContent');
-  const bar = document.getElementById('siteTopBar');
-  const video = document.getElementById('heroVideo');
-  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (video) {
-    // Algunos navegadores ignoran el autoplay hasta que la pestana esta visible
-    const arranca = () => { const pr = video.play(); if (pr && pr.catch) pr.catch(() => {}); };
-    if (quieto) { video.pause(); } else { arranca(); document.addEventListener('visibilitychange', () => { if (!document.hidden) arranca(); }); }
-  }
-
-  let pendiente = false;
-  function pintar() {
-    const y = window.scrollY || window.pageYOffset || 0;
-    const alto = window.innerHeight || 1;
-    const ancho = window.innerWidth || 1;
-
-    if (layer && !quieto && ancho > 920) {
-      layer.style.transform = 'translate3d(0, ' + (y * 0.32).toFixed(1) + 'px, 0)';
-    }
-    if (content && ancho > 920) {
-      const t = Math.min(1, y / (alto * 0.62));
-      content.style.opacity = String(1 - t);
-      content.style.transform = 'translate3d(0, ' + (t * -46).toFixed(1) + 'px, 0)';
-    }
-    if (bar) {
-      bar.classList.toggle('bar-solid', y > alto * 0.7);
-    }
-    pendiente = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!pendiente) { pendiente = true; requestAnimationFrame(pintar); }
-  }, { passive: true });
-  window.addEventListener('resize', pintar);
-  pintar();
-})();
 
 // Filtra la cronologia por era historica
 function filterHistoria(era) {
@@ -3929,6 +4005,7 @@ function filterHistoria(era) {
     const suya = item.getAttribute('data-era');
     item.style.display = (era === 'todos' || suya === String(era)) ? '' : 'none';
   });
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }
 
 // Salta desde el chip de alojamiento de un dia hasta su ficha en la coleccion.
@@ -3943,7 +4020,7 @@ function goToHotel(hotelId, filterCat) {
     const target = hotelId ? document.getElementById(hotelId)
                            : document.getElementById('seccion-hoteles');
     if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', block: hotelId ? 'center' : 'start' });
+    target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: hotelId ? 'center' : 'start' });
     if (hotelId) {
       target.classList.remove('hotel-flash');
       void target.offsetWidth;
@@ -3979,34 +4056,187 @@ function filterHotels(category, srcBtn) {
       }
     }
   });
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 }
 
-// Revelado suave de tarjetas al hacer scroll (con reserva de accesibilidad)
-function initScrollReveal() {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-    return;
-  }
-  const targets = document.querySelectorAll('.day-card-single, .hotel-card-item, .clean-panel, .timeline-card');
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  targets.forEach(el => {
-    el.classList.add('reveal-init');
-    observer.observe(el);
-  });
-}
-
-// Inicializar el mapa y el revelado al cargar la pagina
+// Inicializar el mapa al cargar la pagina.
 window.addEventListener('DOMContentLoaded', () => {
   initMap();
-  initScrollReveal();
+  if (window.refreshScrollMotion) window.refreshScrollMotion();
 });
+
+// Animaciones vinculadas a la posición real del scroll, sin dependencias ni bucle en reposo.
+(function initScrollMotion() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const hero = document.querySelector('.hero');
+  const heroLayer = document.getElementById('heroVideoLayer');
+  const heroContent = document.getElementById('heroMainContent');
+  const heroTitle = heroContent.querySelector('h1');
+  const heroLead = heroContent.querySelector('.hero-lead-text');
+  const heroChips = [...heroContent.querySelectorAll('.stat-chip')];
+  const video = document.getElementById('heroVideo');
+  const bar = document.getElementById('siteTopBar');
+  const journey = document.querySelector('.journey');
+  const stage = journey.querySelector('.journey-stage');
+  const frame = journey.querySelector('.journey-window');
+  const scenes = [...journey.querySelectorAll('.journey-scene')].map(el => ({
+    el, image: el.querySelector('img'), word: el.querySelector('.journey-word'), caption: el.querySelector('.journey-caption')
+  }));
+  const tracks = [...journey.querySelectorAll('.journey-steps i')];
+  const counter = journey.querySelector('.journey-count');
+  const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
+  const ease = n => n * n * (3 - 2 * n);
+  let pending = 0, dirty = true, heroVisible = true, currentScene = -1;
+  let metrics = {};
+  const near = new Set();
+  const photos = [...document.querySelectorAll('.day-photo-wrap, .hotel-photo-holder')];
+  const cards = [...document.querySelectorAll('.day-card-single, .hotel-card-item, .clean-panel, .timeline-card, .route-card-toggle')];
+  const headings = [...document.querySelectorAll('.section-head')];
+  const records = new Map();
+
+  // Las fotos ya están embebidas y verificadas en las fichas. Reutilizamos sus datos.
+  scenes.forEach(scene => {
+    const source = document.querySelector('#' + scene.el.dataset.photo + ' .day-photo-wrap img');
+    if (source) scene.image.src = source.src;
+  });
+
+  function schedule() {
+    if (!pending && !document.hidden) pending = requestAnimationFrame(paint);
+  }
+  function refresh() { dirty = true; schedule(); }
+  window.refreshScrollMotion = refresh;
+
+  // Offset geométrico sin las transformaciones visuales: evita realimentación al animar.
+  function layoutTop(el) {
+    let top = 0;
+    for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
+    return top;
+  }
+  function measure() {
+    metrics = {
+      heroTop: layoutTop(hero), heroHeight: hero.offsetHeight,
+      journeyTop: layoutTop(journey), journeyLength: Math.max(1, journey.offsetHeight - stage.offsetHeight),
+      height: window.innerHeight, mobile: window.innerWidth <= 920
+    };
+    records.forEach((record, el) => {
+      record.top = layoutTop(el);
+      record.height = el.offsetHeight;
+      record.visible = el.getClientRects().length > 0;
+    });
+    dirty = false;
+  }
+  function updateVideo() {
+    if (!video) return;
+    if (reduced.matches || document.hidden || !heroVisible || !hero.offsetHeight) video.pause();
+    else { const play = video.play(); if (play) play.catch(() => {}); }
+  }
+  function paint() {
+    pending = 0;
+    if (dirty) measure();
+    const y = window.scrollY;
+    const { heroTop, heroHeight, journeyTop, journeyLength, height, mobile } = metrics;
+    bar.classList.toggle('bar-solid', y > Math.max(80, heroHeight * .7));
+    if (reduced.matches) return;
+
+    const hp = clamp((y - heroTop) / Math.max(1, heroHeight));
+    const distance = Math.min(Math.max(0, y - heroTop), heroHeight);
+    heroLayer.style.transform = `translate3d(0,${distance * (mobile ? .15 : .32)}px,0) scale(${1 + hp * .14})`;
+    heroContent.style.opacity = String(1 - ease(clamp(hp / .8)));
+    heroTitle.style.transform = `translate3d(0,${-hp * (mobile ? 28 : 80)}px,0) scale(${1 + hp * .09})`;
+    heroLead.style.transform = `translate3d(0,${-hp * 30}px,0)`;
+    heroChips.forEach((chip, i) => {
+      chip.style.transform = `translate3d(${(i - 1) * hp * (mobile ? 12 : 65)}px,${hp * (12 + i * 12)}px,0)`;
+    });
+
+    if (journey.offsetHeight && y + height >= journeyTop && y <= journeyTop + journey.offsetHeight) {
+      const progress = clamp((y - journeyTop) / journeyLength);
+      const open = ease(clamp(progress / .2));
+      frame.style.clipPath = `inset(${(1 - open) * 8}% ${(1 - open) * (mobile ? 4 : 8)}% round ${(1 - open) * 28}px)`;
+      // Dos fundidos y tres pausas de lectura, todos reversibles con el scroll.
+      const blend1 = ease(clamp((progress - .26) / .15));
+      const blend2 = ease(clamp((progress - .62) / .15));
+      const alphas = [1, blend1, blend2];
+      const captionAlphas = [
+        1 - ease(clamp((progress - .26) / .075)),
+        ease(clamp((progress - .335) / .075)) * (1 - ease(clamp((progress - .62) / .075))),
+        ease(clamp((progress - .695) / .075))
+      ];
+      const selected = blend2 >= .5 ? 2 : blend1 >= .5 ? 1 : 0;
+      scenes.forEach((scene, i) => {
+        const local = clamp((progress - [0, .26, .62][i]) / .4);
+        scene.el.style.opacity = String(alphas[i]);
+        scene.image.style.transform = `scale(${1.15 - local * .12}) translate3d(${(local - .5) * (mobile ? -1 : -2)}%,${(local - .5) * 2}%,0)`;
+        scene.word.style.transform = `translate3d(${(local - .5) * -14}%,0,0)`;
+        scene.caption.style.transform = `translate3d(0,${(1 - local) * (mobile ? 32 : 65)}px,0)`;
+        scene.caption.style.opacity = String(captionAlphas[i]);
+      });
+      if (selected !== currentScene) {
+        currentScene = selected;
+        counter.textContent = `0${selected + 1} / 03`;
+        scenes.forEach((scene, i) => scene.el.setAttribute('aria-hidden', String(i !== selected)));
+      }
+      tracks.forEach((track, i) => track.style.transform = `scaleX(${clamp((progress - i / 3) * 3)})`);
+    }
+
+    // Solo se pintan las tarjetas y fotos próximas a la ventana visible.
+    near.forEach(el => {
+      const record = records.get(el);
+      if (!record || !record.visible) return;
+      const top = record.top - y;
+      if (record.kind === 'photo') {
+        const progress = clamp((height - top) / (height + record.height));
+        el.style.setProperty('--photo-y', `${((progress - .5) * (mobile ? 40 : 68)).toFixed(2)}px`);
+      } else if (record.kind === 'card') {
+        const entrance = ease(clamp((height - top) / (height * .28)));
+        el.style.setProperty('--enter-opacity', String(.3 + entrance * .7));
+        el.style.setProperty('--enter-y', `${(1 - entrance) * (mobile ? 28 : 62)}px`);
+        el.style.setProperty('--enter-scale', String(.965 + entrance * .035));
+        el.style.setProperty('--enter-tilt', `${(1 - entrance) * record.direction * (mobile ? .35 : 1.2)}deg`);
+      } else {
+        el.style.setProperty('--heading-fill', `${clamp((height - top) / (height * .45)) * 100}%`);
+      }
+    });
+  }
+
+  photos.forEach(el => { el.classList.add('scroll-photo'); records.set(el, { kind: 'photo' }); });
+  cards.forEach((el, i) => { el.classList.add('scroll-enter'); records.set(el, { kind: 'card', direction: i % 2 ? 1 : -1 }); });
+  headings.forEach(el => records.set(el, { kind: 'heading' }));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) near.add(target); else near.delete(target);
+        if (records.get(target).kind === 'photo') target.classList.toggle('motion-near', isIntersecting);
+      });
+      schedule();
+    }, { rootMargin: '180px 0px' });
+    records.forEach((record, el) => observer.observe(el));
+    new IntersectionObserver(entries => {
+      heroVisible = entries[0].isIntersecting;
+      updateVideo();
+    }).observe(hero);
+  } else {
+    records.forEach((record, el) => near.add(el));
+  }
+  if ('ResizeObserver' in window) {
+    const resize = new ResizeObserver(refresh);
+    resize.observe(document.querySelector('main'));
+    resize.observe(hero);
+  }
+  function applyPreference() {
+    document.documentElement.classList.toggle('motion-ready', !reduced.matches);
+    journey.classList.toggle('journey-ready', !reduced.matches && scenes.every(scene => scene.image.hasAttribute('src')));
+    updateVideo();
+    refresh();
+  }
+  reduced.addEventListener('change', applyPreference);
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', refresh, { passive: true });
+  window.addEventListener('pageshow', refresh);
+  document.addEventListener('visibilitychange', () => { updateVideo(); if (!document.hidden) refresh(); });
+  document.fonts.ready.then(refresh);
+  applyPreference();
+})();
+
 </script>
 
 </body>

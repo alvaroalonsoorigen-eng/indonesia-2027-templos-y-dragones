@@ -179,6 +179,17 @@ Tanto la **Ruta A (Con Java)** como la **Ruta B (Sin Java)** desglosan ahora los
   * **Identidad de git.** No había `user.name` ni `user.email` configurados. Se configuraron **solo en este repositorio** (no en la configuración global del usuario) y con el **correo privado de GitHub** (`242413540+alvaroalonsoorigen-eng@users.noreply.github.com`) en lugar del correo real, precisamente porque el repositorio es público y el correo del autor de un commit queda expuesto de forma permanente.
 * **Añadidos para la publicación:** un `README.md` que explica qué es el documento, que `index.html` es una salida generada y no se edita a mano, cómo regenerarlo con los dos scripts, el criterio de exactitud seguido y los créditos fotográficos; y un `.gitignore` para el ruido del sistema, los artefactos de verificación en navegador y la caché de Python.
 
+### R. Revisión e integración del movimiento vinculado al scroll (5 de septiembre de 2026)
+* **Origen:** los cambios los preparó otro agente (Codex) en local. La petición fue revisarlos, implantarlos y comprobarlos.
+* **Qué aporta:** una secuencia de presentación a pantalla completa con Java, Komodo y Bali, con fundidos reversibles gobernados por el scroll; parallax dentro de las fotos de días y hoteles; entrada progresiva de las tarjetas; relleno de color de los titulares; y el vídeo de portada, que ahora se pausa cuando la portada sale de pantalla. El motor va en tres ficheros separados (`scroll-scenes.html`, `scroll-motion.css` y `scroll-motion.js`) que el generador incrusta, sin ninguna dependencia ni petición externa nueva.
+* **Comprobaciones que pasó:**
+  * **Reproducibilidad.** Se regeneró `index.html` desde cero y salió **idéntico byte a byte** al que había dejado, lo que confirma que no se editó el HTML a mano y que la regla del proyecto se respetó.
+  * **Coherencia de las escenas con el itinerario.** Las tres reutilizan fotos ya verificadas de las fichas (`dia-a-2` Borobudur, `dia-a-6` Padar, `dia-a-10` el Agung sobre los arrozales) y sus textos alternativos coinciden con lo que muestran, incluso después de la reestructuración de días de la víspera.
+  * **Degradación segura.** Todo el movimiento cuelga de la clase `motion-ready` que añade el script: si el JavaScript falla, las tarjetas quedan opacas, los titulares recuperan color sólido y las escenas no se muestran. Verificado retirando la clase en caliente.
+  * **Movimiento reducido.** Con `prefers-reduced-motion: reduce` se omite la secuencia, se pausa el vídeo, desaparecen las transformaciones y siguen presentes los 28 días y los 30 hitos.
+  * **Funcionalidad intacta:** las dos rutas, la sincronización del mapa, los filtros de hoteles y de eras, el salto del chip de día a la ficha del hotel y las siete pantallas del móvil.
+* **Regresión encontrada y corregida.** La inclinación de entrada de las tarjetas (`rotate` sobre `.scroll-enter`) ensancha su caja envolvente y provocaba **barra de scroll horizontal en anchos intermedios: 46 px a 1024 px y 28 px a 1280 px**. Se confirmó que era nueva comparando con la versión publicada anterior (0 px) y se aisló la causa anulando solo la rotación (0 px). Corregido con `overflow-x: clip` en `html` y `body`, que a diferencia de `hidden` **no rompe el `position: sticky` del mapa**, cosa que se verificó expresamente. Resultado: **0 px de desbordamiento en 320, 390, 768, 1024, 1280 y 1440 px**, recorriendo la página entera en cada ancho, y el mapa sigue pegándose correctamente.
+
 ---
 
 ## 3. Estado de los archivos en la carpeta
@@ -278,4 +289,20 @@ Indonesia 2027 - Templos y dragones/
 1. **Previsualización automatizada integrada mediante subagente de navegador:** Resuelto en esta sesión mediante el servidor MCP de Playwright, ya disponible; se ha verificado visualmente la web completa en viewport móvil y de escritorio tras cada tanda de cambios relevante.
 2. **Precios y compra exacta de billetes de avión para abril de 2027:** Las aerolíneas regulares abren inventario de tarifas con un máximo de 330 a 360 días de antelación; las tarifas finales se concretarán en cuanto se abra la venta.
 3. **Datos de visado, tasas y salud sujetos a cambio:** La normativa indonesia de exención de visado y las tasas de parques nacionales han cambiado varias veces en los últimos años; se recomienda reconfirmar estos datos 2 o 3 meses antes de volar (advertencia incluida explícitamente en la nueva sección de guía práctica).
-4. **Creación del repositorio remoto en GitHub:** Siguiendo la Regla 6 de Álvaro ("Pregunta antes de subir a GitHub"), no se ha creado ni subido el código al repositorio remoto en GitHub, a la espera de que el usuario lo autorice expresamente.
+4. **Creación del repositorio remoto en GitHub:** Resuelto el 4 de septiembre de 2026. El usuario autorizó expresamente la subida y el proyecto está publicado en `alvaroalonsoorigen-eng/indonesia-2027-templos-y-dragones`, con GitHub Pages sirviendo la web navegable. Ver el apartado Q.
+
+## 5 de septiembre de 2026: movimiento vinculado al scroll
+
+Petición: aumentar el efecto visual del scroll en la guía de Indonesia y mantener todos los cambios en local hasta nueva autorización.
+
+- Secuencia de presentación con Java, Komodo y Bali, con escenario fijo, apertura del encuadre, zoom, fundidos reversibles y movimiento independiente del texto. Java queda identificado como exclusivo de la Ruta A. Las tres imágenes reutilizan los datos ya incrustados en las fichas del itinerario.
+- Portada con movimiento a distintas velocidades en el vídeo, el título y las etiquetas. Enlaces para saltar directamente al selector de rutas desde la portada y la secuencia.
+- Parallax dentro de las fotos de días y hoteles, entrada gradual de tarjetas y revelado del color de los títulos. Se conserva el scroll nativo y las tarjetas terminan de entrar antes de alcanzar la zona de lectura.
+- Motor propio en `fuentes/scroll-motion.js`, estilos en `fuentes/scroll-motion.css` y presentación en `fuentes/scroll-scenes.html`. El generador los incrusta en el HTML final. Sin nuevas dependencias ni peticiones externas. El HTML pasa de 8.51 a 8.52 MiB, un incremento de 15.459 bytes sobre la versión anterior.
+- Se animan las fotos y tarjetas próximas a la ventana, con un fotograma solicitado por evento y sin bucle permanente en reposo. El vídeo se pausa cuando la portada sale de pantalla. El mapa evita actualizar repetidamente el mismo día y queda bajo la barra de navegación.
+- Menor amplitud en móvil. La presentación se oculta al entrar en otras pantallas móviles. Se conserva la pantalla activa al cambiar entre móvil y escritorio y se puede volver a la ruta desde la navegación superior.
+- La preferencia de reducir movimiento se aplica también si cambia con la página abierta: se omite la secuencia, se detiene el vídeo y quedan visibles los contenidos sin movimiento.
+
+Validación local: build reproducible byte a byte; consola sin errores; ambos itinerarios, sus 28 días y sincronización del mapa; siete pantallas móviles y selector manual del mapa; cuatro filtros de hoteles; enlaces desde el día al alojamiento; cinco anchos (320, 390, 768, 1024 y 1440 px) sin desbordamiento horizontal; cambio de preferencia de movimiento en vivo; todas las imágenes cargadas; ninguna petición externa; apertura directa del HTML en modo sin conexión. Revisados visualmente portada, las tres escenas, itinerario y hoteles en capturas de escritorio y móvil con Chromium local.
+
+Revisado e integrado el 5 de septiembre de 2026, ya con el repositorio publicado y autorizado. Ver el apartado R para el resultado de la revisión y la regresión corregida.

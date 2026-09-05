@@ -16,6 +16,7 @@ Una sola página HTML autocontenida, de unos 8,5 MB, que funciona **sin conexió
 - **Cronología de Indonesia en 30 hitos**, filtrable por era, del Homo erectus de Java a la actualidad.
 - **Guía práctica**: visado, salud, dinero, conectividad, clima, equipaje.
 - **Logística aérea y criterio de descartes**, con el razonamiento de por qué se descartan destinos populares.
+- **Paisajes animados al hacer scroll.** Java, Komodo y Bali se suceden en una escena fija con zoom, fundidos y distintas velocidades para foto y texto. Las fotos del itinerario y los hoteles tienen parallax, y las tarjetas entran progresivamente. Incluye acceso directo a las rutas y respeta la preferencia de reducir movimiento.
 
 ## Criterio de exactitud
 
@@ -45,6 +46,9 @@ Requiere Python 3 y Pillow. `build.py` valida al terminar que no se haya colado 
 ├── progress.md             Registro de decisiones de diseño y peticiones resueltas
 └── fuentes/
     ├── build.py            Generador principal
+    ├── scroll-scenes.html Secuencia de paisajes, reutiliza las fotos del itinerario
+    ├── scroll-motion.css  Estilos de movimiento, móvil y accesibilidad
+    ├── scroll-motion.js   Animaciones vinculadas al scroll, sin dependencias
     ├── build_cache.py      Empaqueta las fotos a base64
     ├── imgcache.json       Las 54 fotos en WebP base64
     ├── hero_loop.mp4       Vídeo de portada (20 s en bucle)
