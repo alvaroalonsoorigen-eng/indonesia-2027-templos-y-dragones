@@ -2493,6 +2493,97 @@ a.day-chip:hover::after, a.day-chip:focus-visible::after {{ opacity: 1; }}
   line-height: 1.35;
 }}
 
+/* Descartes secundarios: mismo criterio, sin foto propia */
+.descartes-compactos {{
+  margin-top: 22px;
+}}
+
+.compactos-titulo {{
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.22rem;
+  color: var(--text-title);
+  margin-bottom: 14px;
+}}
+
+.compactos-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(252px, 1fr));
+  gap: 14px;
+}}
+
+.compacto-item {{
+  background: var(--c-white);
+  border: 1px solid var(--border-light);
+  border-left: 3px solid var(--c-coral);
+  border-radius: var(--radius-sm);
+  padding: 15px 17px;
+}}
+
+.compacto-item strong {{
+  display: block;
+  font-size: 0.94rem;
+  color: var(--text-title);
+  margin-bottom: 5px;
+}}
+
+.compacto-item p {{
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-body);
+  margin: 0;
+}}
+
+/* Panel de respaldo editorial y su comparativa de dos fotos */
+.respaldo-traveler {{
+  margin-top: 24px;
+  border-left: 4px solid var(--c-teal);
+}}
+
+.respaldo-traveler .tag-label {{
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--c-teal-dark);
+  margin-bottom: 8px;
+  display: inline-block;
+}}
+
+.respaldo-traveler > p {{ margin-bottom: 14px; }}
+
+.comparativa-fotos {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0 4px;
+}}
+
+.comparativa-fotos figure {{ margin: 0; }}
+
+.comparativa-fotos figcaption {{
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  padding-top: 8px;
+}}
+
+/* Alojamiento considerado y descartado */
+.nota-descartado {{
+  margin-top: 20px;
+  border-left: 4px solid var(--c-coral-dark);
+  background: #fffdfc;
+}}
+
+.nota-descartado .tag-label {{
+  background: var(--c-peach);
+  color: var(--c-coral-dark);
+  margin-bottom: 8px;
+  display: inline-block;
+}}
+
+.nota-descartado p {{ margin-bottom: 12px; }}
+
+@media (max-width: 600px) {{
+  .comparativa-fotos {{ grid-template-columns: 1fr; }}
+}}
+
 /* Respaldo editorial y comparativa de Traveler */
 .traveler-points-grid {{
   display: grid;
@@ -3995,29 +4086,13 @@ footer.clean-footer {{
         </ul>
       </div>
 
-      <div class="clean-panel panel-recommended" style="margin-top:20px;">
-        <div class="guide-card-head" style="margin-bottom: 12px;">
-          <span class="guide-card-icon" style="background: var(--c-sand);">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          </span>
-          <div>
-            <span class="tag-label" style="background: var(--c-teal-light); color: var(--c-teal-deep); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px;">Reseña editorial de Traveler</span>
-            <h3 class="panel-header-title" style="margin-top: 4px;">Buahan, A Banyan Tree Escape: el concepto «sin muros ni puertas»</h3>
-          </div>
-        </div>
-        <p>
-          Condé Nast Traveler dedicó una amplia reseña al resort más comentado y vanguardista del centro de Bali: <strong>Buahan, A Banyan Tree Escape</strong> (en Payangan, al norte de Ubud, en la subida hacia las montañas de Munduk).
-        </p>
-        <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); margin: 14px 0; border: 1px solid var(--border-light);">
-          <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.6;">
-            <li><strong>Concepto arquitectónico:</strong> dieciséis pabellones (balés) construidos con madera noble de palo fierro reciclado sin ninguna pared exterior ni puerta, solo cortinas translúcidas y persianas de bambú para la lluvia. Cada villa cuenta con piscina privada suspendida sobre el valle y vistas despejadas a las siete cumbres del centro de Bali.</li>
-            <li><strong>Sostenibilidad y bienestar:</strong> solo adultos, cocina hiperlocal plant-based a cargo del chef Eka Sunarya con ingredientes recogidos a menos de una hora del lobby, y Toja Spa en pabellones de bambú abiertos sobre el cañón del río Ayung.</li>
-            <li><strong>Evaluación de descanso y confort de sueño:</strong> cuenta con un sistema tecnológico de aire acondicionado localizado que refresca la cama durante la noche y mosquitera integral. Sin embargo, la ausencia total de cerramiento hermético implica convivir con los sonidos de la selva tropical (canto de ranas, aves al alba) y la presencia natural de insectos y pequeños reptiles. Excelente para una experiencia sensorial inmersiva, pero descartable para quienes requieran insonorización convencional o sientan rechazo hacia la fauna nocturna.</li>
-          </ul>
-        </div>
-        <div class="hotel-action-links" style="margin-top: 14px;">
-          <a href="https://escape.banyantree.com/destinations/buahan" target="_blank" rel="noopener" class="action-btn btn-official-web">Web oficial Buahan</a>
-          <a href="https://www.traveler.es/hotels/buahan-kaja/buahan-a-banyan-tree-escape" target="_blank" rel="noopener" class="action-btn btn-booking-com">Reseña en Traveler</a>
+      <div class="clean-panel nota-descartado">
+        <span class="tag-label">Mirado y descartado</span>
+        <h3 class="panel-header-title">Buahan, A Banyan Tree Escape</h3>
+        <p>Es el resort más comentado del centro de Bali y Condé Nast Traveler le dedicó una reseña amplia: dieciséis pabellones de madera <strong>sin una sola pared exterior ni puerta</strong>, solo cortinas y persianas de bambú, cada uno con piscina privada suspendida sobre el valle del Ayung. Solo adultos, cocina vegetal con producto de una hora a la redonda y spa en pabellones abiertos.</p>
+        <p><strong>Por qué no está en la colección:</strong> por dos motivos que pesan más que el encanto. Está en Payangan, al norte de Ubud, así que <strong>no cae en ninguna de las dos rutas</strong>. Y sobre todo, no encaja con la prioridad de este viaje: al no haber cerramiento, se duerme con el sonido de la selva y con la fauna que entre, y aquí se ha buscado justo lo contrario. Tiene climatización localizada sobre la cama y mosquitera integral, pero eso no es insonorización.</p>
+        <div class="hotel-action-links">
+          <a href="https://www.traveler.es/hotels/buahan-kaja/buahan-a-banyan-tree-escape" target="_blank" rel="noopener" class="action-btn btn-official-web">Leer la reseña en Traveler</a>
         </div>
       </div>
     </section>
@@ -4156,56 +4231,41 @@ footer.clean-footer {{
 
       </div>
 
-      <div class="clean-panel panel-recommended" style="margin-top: 28px;">
-        <div class="guide-card-head" style="margin-bottom: 12px;">
-          <span class="guide-card-icon" style="background: var(--c-sand);">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-          </span>
-          <div>
-            <span class="tag-label" style="background: var(--c-teal-light); color: var(--c-teal-deep); font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px;">Respaldo editorial</span>
-            <h3 class="panel-header-title" style="margin-top: 4px;">El criterio de Condé Nast Traveler: «Bali sin Instagram»</h3>
+      <div class="descartes-compactos">
+        <h3 class="compactos-titulo">Y estos tres, por el mismo motivo</h3>
+        <div class="compactos-grid">
+          <div class="compacto-item">
+            <strong>Tegallalang y Alas Harum</strong>
+            <p>Los arrozales convertidos en parque de atracciones: columpios de alquiler con vestido incluido para el posado y <strong>civetas enjauladas</strong> para vender café luwak falso.</p>
+          </div>
+          <div class="compacto-item">
+            <strong>Pura Lempuyang, la Puerta del Cielo</strong>
+            <p>Colas de hasta tres horas con número para una foto en la que el guía <strong>pone un espejo bajo el móvil</strong> y finge el reflejo de un lago que no existe.</p>
+          </div>
+          <div class="compacto-item">
+            <strong>Tirta Empul</strong>
+            <p>La fuente sagrada más conocida, con turnos y cientos de miradas alrededor mientras te sumerges. El itinerario va a Pura Mengening en su lugar.</p>
           </div>
         </div>
-        <p>La prestigiosa revista internacional de viajes <em>Condé Nast Traveler</em> publicó una reveladora investigación editorial titulada <strong>«Bali sin Instagram (y sin estos lugares que puedes evitar)»</strong>. Su análisis coincide punto por punto con los descartes de este viaje y confirma que el sobreturismo ha desvirtuado la autenticidad de varios de los puntos más publicitados:</p>
+      </div>
 
-        <div class="traveler-points-grid">
-          <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); border-left: 3px solid var(--c-coral);">
-            <strong style="color: var(--c-coral-dark); display: block; margin-bottom: 6px;">Lo que Traveler recomienda evitar</strong>
-            <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.55;">
-              <li><strong>Kuta, Seminyak y Canggu:</strong> atascos kilométricos de motos, ocio ruidoso y grúas de hormigón sustituyendo los campos de arroz por urbanismo masivo.</li>
-              <li><strong>Tegallalang y Alas Harum:</strong> convertidos en un «Disneyland entre arrozales», con columpios de alquiler con vestidos pomposos para posados y jaulas con civetas para falso café luwak.</li>
-              <li><strong>Pura Lempuyang (Puerta del Cielo):</strong> colas de hasta 3 horas con número para una foto en la que los guías colocan un espejo bajo la lente del móvil para fingir el reflejo de un lago inexistente.</li>
-              <li><strong>Tirta Empul y Lovina:</strong> turnos masificados para sumergirse en la fuente sagrada frente a cientos de miradas, y acoso de decenas de lanchas motorizadas persiguiendo delfines al alba.</li>
-            </ul>
-          </div>
+      <div class="clean-panel respaldo-traveler">
+        <span class="tag-label">Respaldo editorial</span>
+        <h3 class="panel-header-title">Y adónde manda Condé Nast Traveler en su lugar</h3>
+        <p>El reportaje <em>Bali sin Instagram</em> de Condé Nast Traveler España coincide con estos descartes y señala dos zonas como el antídoto al sobreturismo: <strong>los arrozales de Sidemen</strong>, con sus telares familiares y el silencio frente al Agung, y <strong>las montañas y cascadas de Munduk</strong>, con sus cafetales y su bosque nuboso. Son exactamente las dos bases donde duerme este viaje.</p>
 
-          <div style="background: var(--bg-soft); padding: 16px 18px; border-radius: var(--radius-md); border-left: 3px solid var(--c-teal);">
-            <strong style="color: var(--c-teal-deep); display: block; margin-bottom: 6px;">El auténtico refugio según Traveler</strong>
-            <p style="font-size: 0.88rem; color: var(--text-body); line-height: 1.55; margin-bottom: 10px;">
-              Para experimentar la esencia balinesa sin artificios, Condé Nast Traveler señala expresamente dos coordenadas como el verdadero antídoto al sobreturismo:
-            </p>
-            <ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--text-body); line-height: 1.55;">
-              <li><strong>Los arrozales de Sidemen:</strong> el ritmo pausado del este balinés, telares tradicionales en casas familiares y silencio frente al monte Agung.</li>
-              <li><strong>Las montañas y cascadas de Munduk:</strong> aire fresco en las montañas del norte, plantaciones de café orgánico y vegetación virgen.</li>
-            </ul>
-            <p style="font-size: 0.86rem; color: var(--c-teal-deep); font-weight: 600; margin-top: 10px; margin-bottom: 0;">
-              Estas dos zonas son exactamente las dos bases estratégicas elegidas para el alojamiento en Bali en la Ruta B de este proyecto.
-            </p>
-          </div>
-        </div>
-
-        <div class="traveler-compare-photos">
-          <figure style="margin: 0; background: var(--c-sand); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-light);">
-            <img src="{get_img("tirta_empul")}" alt="Tirta Empul masificado" style="width: 100%; height: 160px; object-fit: cover; display: block;">
-            <figcaption style="padding: 8px 12px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;"><strong>Tirta Empul:</strong> colas de turistas para la foto de rigor en el estanque sagrado, cuestionado por Traveler.</figcaption>
+        <div class="comparativa-fotos">
+          <figure>
+            <div class="photo-frame"><img src="{get_img("tirta_empul")}" alt="Colas de visitantes en las fuentes de Tirta Empul"></div>
+            <figcaption><strong>Tirta Empul:</strong> la fuente de la foto de rigor, por turnos.</figcaption>
           </figure>
-          <figure style="margin: 0; background: var(--c-sand); border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-light);">
-            <img src="{get_img("pura_mengening")}" alt="Pura Mengening, alternativa íntima" style="width: 100%; height: 160px; object-fit: cover; display: block;">
-            <figcaption style="padding: 8px 12px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;"><strong>Pura Mengening:</strong> la alternativa del itinerario de este viaje, manantiales sagrados en plena intimidad.</figcaption>
+          <figure>
+            <div class="photo-frame"><img src="{get_img("pura_mengening")}" alt="Manantiales sagrados de Pura Mengening"></div>
+            <figcaption><strong>Pura Mengening:</strong> la que hay en el itinerario, con el ritual en intimidad.</figcaption>
           </figure>
         </div>
 
-        <p class="source-note" style="margin-top: 14px; margin-bottom: 0;">Referencia: Condé Nast Traveler España, reportaje de investigación «Bali sin Instagram (y sin estos lugares que puedes evitar)».</p>
+        <p class="source-note">Condé Nast Traveler España, reportaje «Bali sin Instagram (y sin estos lugares que puedes evitar)».</p>
       </div>
     </section>
   </div>
