@@ -5029,6 +5029,47 @@ window.addEventListener('DOMContentLoaded', () => {{
 </html>
 """
 
+# --- Fotos repetidas: se incrustan una sola vez ------------------------------
+# Varias fotos se usan en mas de un dia (o como poster del video). En lugar de
+# repetir el base64, la primera aparicion conserva la foto y lleva data-img-id;
+# las siguientes llevan data-img-from y un script previo a los demas les copia
+# la foto antes de que arranquen el mapa y el movimiento del scroll.
+import re as _re
+from collections import Counter as _Counter
+
+_uri_re = _re.compile(r'(src|poster)="(data:image/webp;base64,[A-Za-z0-9+/=]+)"')
+_counts = _Counter(m.group(2) for m in _uri_re.finditer(html))
+_ids = {}
+_saved = 0
+
+def _dedupe(m):
+    global _saved
+    attr, uri = m.group(1), m.group(2)
+    if _counts[uri] < 2:
+        return m.group(0)
+    if uri not in _ids:
+        _ids[uri] = f"f{len(_ids) + 1}"
+        return f'{attr}="{uri}" data-img-id="{_ids[uri]}"'
+    _saved += len(uri)
+    return f'data-img-from="{_ids[uri]}"'
+
+html = _uri_re.sub(_dedupe, html)
+if _ids:
+    _filler = (
+        "<script>\n"
+        "// Copia cada foto repetida desde su primera aparicion (src o poster).\n"
+        "document.querySelectorAll('[data-img-from]').forEach(function (img) {\n"
+        "  var o = document.querySelector('[data-img-id=\"' + img.dataset.imgFrom + '\"]');\n"
+        "  if (o) img.src = o.getAttribute('src') || o.getAttribute('poster');\n"
+        "});\n"
+        "</script>\n"
+    )
+    _anchor = html.find("<script>", html.find('<footer class="clean-footer">'))
+    assert _anchor > 0, "No se encontro el punto de insercion del script de fotos repetidas."
+    html = html[:_anchor] + _filler + html[_anchor:]
+    assert html.find("data-img-from") < _anchor, "Hay fotos repetidas despues del script que las rellena."
+    print(f"Fotos repetidas incrustadas una sola vez: {len(_ids)} fotos, {_saved/1024/1024:.2f} MB ahorrados")
+
 # Validacion estricta de la regla obligatoria de Alvaro: NINGUNA raya larga (—)
 assert "—" not in html, "ERROR CRITICO: Se ha detectado una raya larga (—) en el archivo HTML generado."
 

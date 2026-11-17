@@ -12,7 +12,7 @@ Compara dos rutas para las fechas exactas del 21 de abril al 4 de mayo (11 noche
 - **Ruta A (Con Java):** Yogyakarta (Borobudur y Prambanan) + Komodo (barco tradicional Phinisi y resort de espigón) + Bali rural (Sidemen).
 - **Ruta B (Sin Java):** Bali sagrado (Sidemen y templos de roca) + Komodo (barco y resort) + Norte místico (Munduk y cascadas).
 
-El entregable es **un único `index.html` autónomo de menos de 3 MB que funciona 100% sin conexión**: 26 fotos reales verificadas a ojo (destinos y 12 alojamientos) van incrustadas en base64 WebP. Sin CDN, sin librerías externas que requieran internet, sin llamadas a red.
+El entregable es **un único `index.html` autónomo de unos 8 MB que funciona 100% sin conexión**: fotos reales verificadas a ojo (destinos y 10 alojamientos), vídeo de portada y tipografías van incrustados en base64. Cada foto se incrusta una sola vez aunque se repita en varios días. Sin CDN, sin librerías externas que requieran internet, sin llamadas a red.
 
 ---
 
@@ -36,7 +36,7 @@ Indonesia 2027 - Templos y dragones/
 └── fuentes/
     ├── build.py                    <- Monta index.html inyectando imgcache.json.
     ├── build_cache.py              <- Genera imgcache.json y la hoja de contactos.
-    ├── imgcache.json               <- Las 26 fotos codificadas en base64 WebP.
+    ├── imgcache.json               <- Las 58 fotos codificadas en base64 WebP.
     ├── hoja_contactos.jpg          <- Mosaico de comprobación visual de todas las fotos.
     ├── raw/                        <- Fotos individuales procesadas en WebP (800x520).
     └── descargar_y_procesar.py     <- Script de descarga original de imágenes.
@@ -67,5 +67,5 @@ mkdir -p /tmp/viaje && cp index.html /tmp/viaje/ && cd /tmp/viaje && python3 -m 
 
 Abre `http://localhost:8901/` en el navegador para comprobar:
 - Alternancia instantánea entre la Ruta A (con Java) y la Ruta B (sin Java).
-- Filtrado por categorías de la sección de 12 alojamientos especiales (espigón, playa privada, bambú).
-- Carga nítida e instantánea de las 26 fotografías sin conexión a internet.
+- Filtrado por categorías de la sección de 10 alojamientos especiales (espigón, playa privada, bambú).
+- Carga nítida e instantánea de todas las fotografías sin conexión a internet.

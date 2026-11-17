@@ -6,7 +6,7 @@ Documento de decisión interactivo para un viaje de 14 días por Indonesia, del 
 
 ## Qué es
 
-Una sola página HTML autocontenida, de unos 8,5 MB, que funciona **sin conexión y sin servidor**: basta abrir `index.html` en cualquier navegador. Todas las fotos, el vídeo de portada, las tipografías y el mapa van embebidos en el propio fichero (WebP y WOFF2 en base64, y SVG vectorial), sin una sola llamada de red ni dependencia externa.
+Una sola página HTML autocontenida, de unos 8 MB, que funciona **sin conexión y sin servidor**: basta abrir `index.html` en cualquier navegador. Todas las fotos, el vídeo de portada, las tipografías y el mapa van embebidos en el propio fichero (WebP y WOFF2 en base64, y SVG vectorial), sin una sola llamada de red ni dependencia externa.
 
 ## Contenido
 
@@ -37,7 +37,7 @@ python3 build_cache.py   # procesa las fotos de raw/ y genera imgcache.json
 python3 build.py         # genera ../index.html
 ```
 
-Requiere Python 3 y Pillow. `build.py` valida al terminar que no se haya colado ninguna raya larga y que el mapa quede sincronizado.
+Requiere Python 3 y Pillow. `build.py` valida al terminar que no se haya colado ninguna raya larga y que el mapa quede sincronizado. Las fotos que se repiten en varios días se incrustan una sola vez y se reutilizan al cargar la página.
 
 ### Estructura
 
@@ -50,7 +50,7 @@ Requiere Python 3 y Pillow. `build.py` valida al terminar que no se haya colado 
     ├── scroll-motion.css  Estilos de movimiento, móvil y accesibilidad
     ├── scroll-motion.js   Animaciones vinculadas al scroll, sin dependencias
     ├── build_cache.py      Empaqueta las fotos a base64
-    ├── imgcache.json       Las 54 fotos en WebP base64
+    ├── imgcache.json       Las 58 fotos en WebP base64
     ├── hero_loop.mp4       Vídeo de portada (20 s en bucle)
     ├── mapa_land.json      Polígonos de la costa de Indonesia
     ├── hoja_contactos.jpg  Mosaico para verificar las fotos a ojo

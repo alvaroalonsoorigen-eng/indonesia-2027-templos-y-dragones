@@ -373,3 +373,13 @@ Hallazgos e incorporaciones realizadas:
 Validación técnica:
 - Build reproducible en `fuentes/build.py` con 0 rayas largas.
 - Verificación automatizada con Playwright en Chrome Headless: 0 errores de consola, 14 días en rutas A y B, filtros de hoteles operativos, 7 pantallas móviles conmutables limpiamente, y adaptación responsiva en anchos de 1440px y 390px.
+
+## 18 de noviembre de 2026: revisión y optimización del peso
+
+Petición: revisar lo trabajado, dejar GitHub actualizado y enviar por correo el enlace a la versión optimizada y publicada.
+
+- Revisión: la copia local y la publicada en GitHub Pages eran idénticas byte a byte (último cambio del 7 de septiembre). AGENTS.md conservaba cifras de la primera versión (menos de 3 MB, 26 fotos, 12 alojamientos) y se han corregido a las reales; README actualizado.
+- Optimización: 9 fotos se repetían en varios días o como póster del vídeo, hasta 5 veces la estación de Zaragoza. Ahora `build.py` incrusta cada una una sola vez y un pequeño script las copia al cargar, antes de que arranquen el mapa y el movimiento del scroll. El HTML pasa de 9,49 a 8,03 MB (1,46 MB menos, un 15 %), sin tocar la calidad de ninguna foto.
+- Se descartó recomprimir las fotos: ya están a calidad media alta y bajar a 70 solo ahorraba un 25 % adicional a costa de nitidez.
+
+Validación: el HTML nuevo, deshaciendo el deduplicado, es idéntico al publicado; 56 imágenes cargadas y ninguna rota; las 12 repeticiones rellenas; las tres escenas del scroll con su foto; vídeo de portada listo; Ruta B con sus 14 fotos de día; consola sin errores; vista móvil de 375 px sin desbordamiento horizontal.
